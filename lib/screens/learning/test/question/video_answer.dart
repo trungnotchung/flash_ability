@@ -19,6 +19,7 @@ class _VideoAnswerState extends State<VideoAnswer> {
   late VideoPlayerController _controller;
   bool _isInitialized = false;
   bool _showControls = true;
+  bool? _isAnswerCorrect;
   Timer? _hideTimer;
 
   @override
@@ -111,36 +112,53 @@ class _VideoAnswerState extends State<VideoAnswer> {
             alignment: Alignment.center,
             child: const CircularProgressIndicator(),
           ),
-          const SizedBox(height: 20),
-          const Text(
-            'Answer',
-            style: TextStyle(
+    const SizedBox(height: 20),
+      const Text(
+        'Answer',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+
+      const SizedBox(height: 10),
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: TextField(
+            onSubmitted: (value) {
+              setState(() {
+                _isAnswerCorrect = value.trim() == widget.answer.trim();
+              });
+            },
+            decoration: const InputDecoration(
+              hintText: 'Type answer here',
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(bottom: 10),
+            ),
+            style: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 10),
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Type answer here',
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(bottom: 10),
-                ),
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
+        ),
+      ),
+
+      const SizedBox(height: 10), // 👈 Feedback spacing
+      if (_isAnswerCorrect != null)
+        Text(
+          _isAnswerCorrect! ? 'Correct Answer!' : 'Incorrect Answer!',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: _isAnswerCorrect! ? Colors.green : Colors.red,
           ),
-        ],
+        ),
+      ],
       ),
     );
   }

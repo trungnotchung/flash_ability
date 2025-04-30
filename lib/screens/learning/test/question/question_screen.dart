@@ -1,4 +1,6 @@
+import 'package:flash_ability/screens/learning/test/question/question_videos.dart';
 import 'package:flash_ability/screens/learning/test/question/video_answer.dart';
+import 'package:flash_ability/screens/learning/test/question/video_answers.dart';
 import 'package:flutter/material.dart';
 
 class QuestionScreen extends StatefulWidget {
@@ -9,11 +11,34 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
+  List<Map<String, dynamic>> questions = [
+    {
+      "type": "video_answer",
+      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "answer": "father",
+    },
+    {
+      "type": "video_answers",
+      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "answers": [
+        "father",
+        "mother",
+        "brother",
+      ],
+      "correctAnswer": "father",
+    }
+  ];
   int currentIndex = 0;
+
+  void moveToPreviousQuestion() {
+    setState(() {
+      currentIndex = (currentIndex - 1 + questions.length) % questions.length;
+    });
+  }
 
   void moveToNextQuestion() {
     setState(() {
-      currentIndex = (currentIndex + 1) % 4;
+      currentIndex = (currentIndex + 1) % questions.length;
     });
   }
 
@@ -37,16 +62,42 @@ class _QuestionScreenState extends State<QuestionScreen> {
             child: IconButton(
               icon: const Icon(Icons.arrow_left, size: 32),
               onPressed: () {
-                // TODO: Xử lý khi nhấn nút trái
+                moveToPreviousQuestion();
               },
             ),
           ),
           // Nội dung chính mở rộng ra hầu hết không gian
-          Expanded(
-            child: VideoAnswer(
-              videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-              answer: "Đây là câu trả lời cho câu hỏi của bạn.",
-            )
+         Expanded(
+            child: Builder(
+              builder: (context) {
+                final questionData = questions[currentIndex];
+                final questionType = questionData['type'] as String;
+
+                switch (questionType) {
+                  case 'video_answer':
+                    return VideoAnswer(
+                      videoUrl: questionData['videoUrl'],
+                      answer: questionData['answer'],
+                    );
+                  case 'video_answers':
+                    return VideoAnswers(
+                      videoUrl: questionData['videoUrl'],
+                      answers: List<String>.from(questionData['answers']),
+                      correctAnswer: questionData['correctAnswer'],
+                    );
+                  // case 'question_videos':
+                  //   return QuestionVideos(
+                  //     question: questionData['question'] ?? '',
+                  //     videoUrls: List<String>.from(questionData['videoUrls'] ?? []),
+                  //     correctIndex: questionData['correctIndex'] ?? 0,
+                  //   );
+                  default:
+                    return Center(
+                      child: Text('Unknown question type: $questionType'),
+                    );
+                }
+              },
+            ),
           ),
           // Nút phải
           Align(
@@ -54,7 +105,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             child: IconButton(
               icon: const Icon(Icons.arrow_right, size: 32),
               onPressed: () {
-                // TODO: Xử lý khi nhấn nút phải
+                moveToNextQuestion();
               },
             ),
           ),
