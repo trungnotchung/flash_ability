@@ -1,0 +1,17 @@
+List<String> dailyVocab = [
+  'Hello',
+  'Thank you',
+  'Goodbye',
+  'Please',
+  'Sorry',
+  'Family',
+  'Work',
+  'Food',
+  'Transport',
+  'Health',
+  'Emergency',
+  'Greeting',
+  'Weather',
+  'Feelings',
+  'Directions',
+];
