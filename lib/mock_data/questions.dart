@@ -94,4 +94,19 @@ List<Map<String, dynamic>> questionData = [
     'question': 'Water boils at 100°C at sea level.',
     'correctAnswer': 'True',
   },
+  {
+    'type': 'matching',
+    'question': 'Match the video with the correct word.',
+    'videoUrls': [
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+    ],
+    'words': ['Lion', 'Elephant'],
+    'correctMatches': ['Lion', 'Elephant'],
+  },
+  {
+    'type': 'fill_in_the_blank',
+    'question': 'Complete the sentence: "The ___ is the largest mammal."',
+    'correctAnswer': 'Elephant',
+  }
 ];
