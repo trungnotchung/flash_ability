@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'screens/main_screen.dart';
 
 void main() {
   runApp(const FlashAbilityApp());
@@ -17,7 +17,7 @@ class FlashAbilityApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const MainScreen(), // This ensures MainScreen is the entry point
       debugShowCheckedModeBanner: false,
     );
   }
