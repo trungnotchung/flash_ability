@@ -91,7 +91,7 @@ class VocabularyDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      vocabulary.exampleSentence,
+                      vocabulary.exampleSentence ?? '',
                       style: const TextStyle(
                         fontSize: 16,
                         fontStyle: FontStyle.italic,

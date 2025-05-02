@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/vocabulary.dart';
 import '../models/topic.dart';
 import '../mock_data/topics.dart';
+import '../mock_data/flashcards.dart';
 import 'search_screen.dart';
 import 'vocabulary_detail_screen.dart';
 import 'topic_detail_screen.dart';
@@ -11,31 +12,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample data for today's vocabulary
-    final List<Vocabulary> todaysVocab = [
-      Vocabulary(
-        id: '1',
-        word: 'Dog',
-        meaning: 'A domesticated carnivorous mammal',
-        exampleSentence: 'The dog is playing outside.',
-        imageUrl: 'assets/images/dog.png',
-      ),
-      Vocabulary(
-        id: '2',
-        word: 'Family',
-        meaning: 'A group of people related by blood or marriage',
-        exampleSentence: 'I spend time with my family every weekend.',
-        imageUrl: 'assets/images/family.png',
-      ),
-      Vocabulary(
-        id: '3',
-        word: 'Travel',
-        meaning:
-            'To go from one place to another, often for leisure or business',
-        exampleSentence: 'I love to travel to new countries.',
-        imageUrl: 'assets/images/travel.png',
-      ),
-    ];
+    // Create vocabulary items from flashcards mock data
+    final List<Vocabulary> todaysVocab = List.generate(
+      3, // Show only 3 flashcards for Today's Vocab
+      (index) => Vocabulary.fromFlashcard(flashcards[index], index),
+    );
 
     // Create topics from mock data (using only the first 4 topics)
     final List<Topic> topics = List.generate(
@@ -410,22 +391,7 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Image.asset(
-                  vocabulary.imageUrl,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[200],
-                      child: const Icon(
-                        Icons.image_not_supported,
-                        size: 32,
-                        color: Colors.grey,
-                      ),
-                    );
-                  },
-                ),
-              ),
+              Expanded(child: _getVocabImage(vocabulary.word)),
               const SizedBox(height: 8),
               Text(
                 vocabulary.word,
@@ -446,6 +412,55 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _getVocabImage(String word) {
+    // Since we might not have actual image assets, use icons based on the word
+    IconData iconData;
+    Color iconColor;
+
+    switch (word.toLowerCase()) {
+      case 'father':
+        iconData = Icons.man;
+        iconColor = Colors.blue;
+        break;
+      case 'mother':
+        iconData = Icons.woman;
+        iconColor = Colors.pink;
+        break;
+      case 'brother':
+        iconData = Icons.boy;
+        iconColor = Colors.indigo;
+        break;
+      case 'sister':
+        iconData = Icons.girl;
+        iconColor = Colors.purple;
+        break;
+      case 'friend':
+        iconData = Icons.people;
+        iconColor = Colors.green;
+        break;
+      case 'teacher':
+        iconData = Icons.school;
+        iconColor = Colors.orange;
+        break;
+      case 'lion':
+        iconData = Icons.pets;
+        iconColor = Colors.amber;
+        break;
+      default:
+        iconData = Icons.text_fields;
+        iconColor = Colors.grey;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: iconColor.withOpacity(0.2),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(iconData, size: 40, color: iconColor),
     );
   }
 
