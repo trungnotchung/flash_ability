@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flash_ability/mock_data/flashcards.dart';
 
 class VocabScreen extends StatelessWidget {
   const VocabScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final vocabulary = ['hello', 'happy', 'mother', 'father', 'sister', 'brother'];
+    List<String> vocabulary = [];
+    for (var flashcard in flashcards) {
+      vocabulary.add(flashcard['word']!);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +38,14 @@ class VocabScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/learning/flashcard', arguments: vocabulary[index]);
+                      Navigator.pushNamed(
+                        context,
+                        '/learning/flashcard',
+                        arguments: {
+                          'words': vocabulary,
+                          'index': index,
+                        }
+                      );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

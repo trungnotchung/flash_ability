@@ -34,7 +34,10 @@ class TopicScreen extends StatelessWidget {
                   Navigator.pushNamed(
                       context,
                       '/learning/flashcard',
-                      arguments: topicVocab[index]
+                      arguments: {
+                        'words': topicVocab,
+                        'index': index,
+                      }
                   );
                 },
                 child: Container(

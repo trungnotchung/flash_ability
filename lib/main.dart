@@ -1,4 +1,4 @@
-import 'package:flash_ability/screens/learning/flashcard/flashcard.dart';
+import 'package:flash_ability/screens/learning/flashcard/flashcards.dart';
 import 'package:flash_ability/screens/learning/learning.dart';
 import 'package:flash_ability/screens/learning/test/question/question_screen.dart';
 import 'package:flash_ability/screens/learning/test/testing.dart';
@@ -27,7 +27,10 @@ class MyApp extends StatelessWidget {
         '/learning': (context) => const LearningScreen(),
         '/learning/all_topics': (context) => const AllTopicsScreen(),
         '/learning/topic': (context) => const TopicScreen(),
-        '/learning/flashcard': (context) => const FlashcardScreen(),
+        '/learning/flashcard': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+          return FlashcardScreen(words: args['words'], index: args['index']);
+        },
         '/learning/vocab': (context) => const VocabScreen(),
         '/learning/test': (context) => const QuestionScreen() //const TestingScreen(),
       },
