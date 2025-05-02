@@ -1,6 +1,6 @@
-import 'package:flash_ability/screens/learning/test/question/question_videos.dart';
 import 'package:flash_ability/screens/learning/test/question/video_answer.dart';
 import 'package:flash_ability/screens/learning/test/question/video_answers.dart';
+import 'package:flash_ability/mock_data/test/questions.dart';
 import 'package:flutter/material.dart';
 
 class QuestionScreen extends StatefulWidget {
@@ -11,23 +11,28 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
-  List<Map<String, dynamic>> questions = [
-    {
-      "type": "video_answer",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      "answer": "father",
-    },
-    {
-      "type": "video_answers",
-      "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      "answers": [
-        "father",
-        "mother",
-        "brother",
-      ],
-      "correctAnswer": "father",
-    }
-  ];
+  // List<Map<String, dynamic>> questions = [
+  //   {
+  //     "type": "video_answer",
+  //     "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  //     "answer": "father",
+  //   },
+  //   {
+  //     "type": "video_answers",
+  //     "videoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  //     "answers": [
+  //       "father",
+  //       "mother",
+  //       "brother",
+  //     ],
+  //     "correctAnswer": "father",
+  //   }
+  // ];
+
+  // Get the question data from the mock data
+  List<Map<String, dynamic>> questions = questionData;
+  // Print the question data to the console
+
   int currentIndex = 0;
 
   void moveToPreviousQuestion() {

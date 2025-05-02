@@ -1,3 +1,4 @@
+import 'package:flash_ability/services/learning/topic/topic.dart';
 import 'package:flutter/material.dart';
 
 class TopicScreen extends StatelessWidget {
@@ -8,14 +9,7 @@ class TopicScreen extends StatelessWidget {
     final String topic = ModalRoute.of(context)?.settings.arguments as String;
 
     // List of family members
-    final List<Map<String, String>> familyMembers = [
-      {'name': 'grandmother', 'route': '/learning/flashcard'},
-      {'name': 'grandfather', 'route': '/learning/flashcard'},
-      {'name': 'mother', 'route': '/learning/flashcard'},
-      {'name': 'father', 'route': '/learning/flashcard'},
-      {'name': 'sister', 'route': '/learning/flashcard'},
-      {'name': 'brother', 'route': '/learning/flashcard'},
-    ];
+    final List<String> topicVocab = TopicOperation.getTopicVocab(topic);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +25,7 @@ class TopicScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-          itemCount: familyMembers.length,
+          itemCount: topicVocab.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
@@ -39,8 +33,8 @@ class TopicScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(
                       context,
-                      familyMembers[index]['route']!,
-                      arguments: familyMembers[index]['name']
+                      '/learning/flashcard',
+                      arguments: topicVocab[index]
                   );
                 },
                 child: Container(
@@ -55,7 +49,7 @@ class TopicScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          familyMembers[index]['name']!,
+                          topicVocab[index],
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
