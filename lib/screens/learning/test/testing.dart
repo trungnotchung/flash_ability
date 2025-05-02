@@ -26,10 +26,15 @@ class TestingScreen extends StatelessWidget {
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(
-                child: Text(
-                  'Test progress 1',
-                  style: TextStyle(fontSize: 18),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/learning/test/question');
+                },
+                child: const Center(
+                  child: Text(
+                    'Test progress 1',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
             ),

@@ -32,7 +32,8 @@ class MyApp extends StatelessWidget {
           return FlashcardScreen(words: args['words'], index: args['index']);
         },
         '/learning/vocab': (context) => const VocabScreen(),
-        '/learning/test': (context) => const QuestionScreen() //const TestingScreen(),
+        '/learning/test': (context) => const TestingScreen(),
+        '/learning/test/question': (context) => const QuestionScreen(),
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:flash_ability/screens/learning/test/question/matching.dart';
 import 'package:flash_ability/screens/learning/test/question/video_answer.dart';
 import 'package:flash_ability/screens/learning/test/question/video_answers.dart';
 import 'package:flash_ability/mock_data/test/questions.dart';
@@ -90,6 +91,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
                       answers: List<String>.from(questionData['answers']),
                       correctAnswer: questionData['correctAnswer'],
                     );
+                  case 'matching':
+                    return MatchingQuestionPage();
                   // case 'question_videos':
                   //   return QuestionVideos(
                   //     question: questionData['question'] ?? '',
