@@ -1,3 +1,4 @@
+import 'package:flash_ability/screens/learning/learning.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'placeholder_screen.dart';
@@ -14,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     const HomePage(),
-    const PlaceholderScreen(title: 'Learning'),
+    const LearningScreen(),
     const PlaceholderScreen(title: 'Management'),
     const PlaceholderScreen(title: 'Profile'),
   ];
