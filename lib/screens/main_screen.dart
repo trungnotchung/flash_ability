@@ -1,4 +1,5 @@
 import 'package:flash_ability/screens/learning/learning.dart';
+import 'package:flash_ability/screens/management/management.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'placeholder_screen.dart';
@@ -18,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomePage(),
     const LearningScreen(),
     // const PlaceholderScreen(title: 'Management'),
-    const ProgressScreen(), // Changed from PlaceholderScreen to ProgressScreen
+    const ManagementScreen(), // Changed from PlaceholderScreen to ProgressScreen
     const PlaceholderScreen(title: 'Profile'),
   ];
 
@@ -50,9 +51,9 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Learning',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_outlined),
-            activeIcon: Icon(Icons.bar_chart),
-            label: 'Progress',
+            icon: Icon(Icons.business_center_outlined),
+            activeIcon: Icon(Icons.business_center),
+            label: 'Management',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),

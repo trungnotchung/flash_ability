@@ -49,7 +49,7 @@ class _SearchScreenState extends State<SearchScreen>
       Vocabulary(
         id: '2',
         word: 'Family',
-        meaning: 'A group of people related by blood or marriage',
+        meaning: 'A flashcard of people related by blood or marriage',
         exampleSentence: 'I spend time with my family every weekend.',
         imageUrl: 'assets/images/family.png',
       ),
