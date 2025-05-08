@@ -17,8 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     const HomePage(),
     const LearningScreen(),
-    const PlaceholderScreen(title: 'Management'),
-    const PlaceholderScreen(title: 'Learning'),
+    // const PlaceholderScreen(title: 'Management'),
     const ProgressScreen(), // Changed from PlaceholderScreen to ProgressScreen
     const PlaceholderScreen(title: 'Profile'),
   ];
