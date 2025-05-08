@@ -2,6 +2,7 @@ import 'package:flash_ability/screens/learning/learning.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'placeholder_screen.dart';
+import 'progress_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,6 +18,8 @@ class _MainScreenState extends State<MainScreen> {
     const HomePage(),
     const LearningScreen(),
     const PlaceholderScreen(title: 'Management'),
+    const PlaceholderScreen(title: 'Learning'),
+    const ProgressScreen(), // Changed from PlaceholderScreen to ProgressScreen
     const PlaceholderScreen(title: 'Profile'),
   ];
 
@@ -48,9 +51,9 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Learning',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_outlined),
-            activeIcon: Icon(Icons.grid_view),
-            label: 'Management',
+            icon: Icon(Icons.bar_chart_outlined),
+            activeIcon: Icon(Icons.bar_chart),
+            label: 'Progress',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
