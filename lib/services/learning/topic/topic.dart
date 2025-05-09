@@ -19,4 +19,21 @@ class TopicOperation {
 
     return vocab;
   }
+
+  static Future<void> addFlashcardToTopic(String topic, Map<String, String> flashcard) async {
+    // Simulate a network call
+    await Future.delayed(const Duration(seconds: 1));
+
+    // Add the flashcard to the specified topic
+    final topicData = topicsWithVocab.firstWhere(
+      (item) => item['topic'] == topic,
+      orElse: () => {},
+    );
+
+    if (topicData.isNotEmpty) {
+      final vocabList = topicData['vocab'] ?? [];
+      vocabList.add(flashcard);
+      topicData['vocab'] = vocabList;
+    }
+  }
 }

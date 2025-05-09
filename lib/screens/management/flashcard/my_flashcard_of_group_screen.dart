@@ -1,3 +1,4 @@
+import 'package:flash_ability/screens/management/flashcard/edit_flashcard_of_group.dart';
 import 'package:flash_ability/services/management/flashcard/flashcard.dart';
 import 'package:flutter/material.dart';
 
@@ -97,7 +98,17 @@ class FlashcardWordCard extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.edit, color: Colors.blue),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditFlashcardScreen(
+                      groupName: groupName,
+                      word: word
+                    )
+                  ),
+                );
+              },
             ),
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),

@@ -1,3 +1,6 @@
+import 'package:flash_ability/services/learning/topic/all_topic.dart';
+import 'package:flash_ability/services/learning/topic/topic.dart';
+import 'package:flash_ability/services/management/flashcard/flashcard.dart';
 import 'package:flutter/material.dart';
 
 class AddFlashcardScreen extends StatefulWidget {
@@ -21,10 +24,20 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
   final TextEditingController _videoUrlController = TextEditingController();
   String _selectedTopic = '';
 
-  final List<String> _topics = [
-    'Business', 'Technology', 'Science', 'Languages',
-    'Arts', 'History', 'Mathematics', 'Literature'
-  ];
+  List<String> _topics = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTopics();
+  }
+
+  Future<void> _loadTopics() async {
+    final topics = await AllTopicsOperation.getAllTopics();
+    setState(() {
+      _topics = topics;
+    });
+  }
 
   @override
   void dispose() {
@@ -39,17 +52,24 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
   void _createFlashcard() {
     if (_formKey.currentState!.validate()) {
       // Create flashcard model
-      final flashcard = FlashcardModel(
-        word: _wordController.text,
-        description: _descriptionController.text,
-        braille: _brailleController.text,
-        imageUrl: _imageUrlController.text,
-        videoUrl: _videoUrlController.text,
-        topic: _selectedTopic,
-      );
+      final flashcard = Map<String, String>.from({
+        'word': _wordController.text,
+        'description': _descriptionController.text,
+        'braille': _brailleController.text,
+        'imageUrl': _imageUrlController.text,
+        'videoUrl': _videoUrlController.text,
+      });
 
       // Here you would typically save the flashcard to your storage
-      // For example: DatabaseService().addFlashcardToGroup(widget.groupName, flashcard);
+      FlashcardOperation.addFlashcardToGroup(
+        widget.groupName,
+        flashcard
+      );
+
+      // Add flashcard to the selected topic
+      if (_selectedTopic.isNotEmpty) {
+        TopicOperation.addFlashcardToTopic(_selectedTopic, flashcard);
+      }
 
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
