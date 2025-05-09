@@ -12,6 +12,7 @@ List<Map<String, dynamic>> recentActivities = [
     'post': 'What’s the best way to memorize vocabulary?',
     'likes': 5,
     'comments': 2,
+    'group': 'Language Learners', // Assigned group
     'commentsData': [
       {
         'user': 'User 2',
@@ -32,6 +33,7 @@ List<Map<String, dynamic>> recentActivities = [
     'post': 'Flashcards are a great way to retain words!',
     'likes': 3,
     'comments': 1,
+    'group': 'Flashcard Enthusiasts', // Assigned group
     'commentsData': [
       {
         'user': 'User 4',
@@ -47,6 +49,7 @@ List<Map<String, dynamic>> recentActivities = [
     'post': 'How do you manage your study schedule?',
     'likes': 8,
     'comments': 5,
+    'group': 'Study Buddies', // Assigned group
     'commentsData': [
       {
         'user': 'User 1',
