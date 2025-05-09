@@ -1,23 +1,7 @@
 import 'package:flash_ability/screens/management/flashcard/my_flashcard_screen.dart';
 import 'package:flash_ability/screens/progress_screen.dart';
+import 'package:flash_ability/screens/community/my_community_screen.dart';
 import 'package:flutter/material.dart';
-
-class FlashcardApp extends StatelessWidget {
-  const FlashcardApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flashcard App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Arial',
-      ),
-      home: const ManagementScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
 
 class ManagementScreen extends StatelessWidget {
   const ManagementScreen({super.key});
@@ -31,10 +15,7 @@ class ManagementScreen extends StatelessWidget {
         leading: const BackButton(color: Colors.black),
         title: const Text(
           'Management',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
         ),
       ),
       body: Padding(
@@ -67,7 +48,14 @@ class ManagementScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ManagementButton(
               title: 'My community',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyCommunityScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -80,11 +68,7 @@ class ManagementButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const ManagementButton({
-    super.key,
-    required this.title,
-    required this.onTap,
-  });
+  const ManagementButton({super.key, required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -100,10 +84,7 @@ class ManagementButton extends StatelessWidget {
         child: Center(
           child: Text(
             title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ),
       ),
