@@ -186,6 +186,7 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
                   final tagTextColor =
                       CommunityTheme.tagTextColors[activityType] ??
                       CommunityTheme.primary;
+                  final groupName = activity['group'] as String;
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 16),
@@ -250,6 +251,63 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
                             ],
                           ),
                         ),
+
+                        // Group indicator - NEW
+                        GestureDetector(
+                          onTap: () {
+                            // Navigate to the group when tapped
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => GroupDetailScreen(
+                                      groupName: groupName,
+                                      recentActivities:
+                                          recentActivities
+                                              .where(
+                                                (activity) =>
+                                                    activity['group'] ==
+                                                    groupName,
+                                              )
+                                              .toList(),
+                                    ),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: 16.0,
+                              right: 16.0,
+                              bottom: 12.0,
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.group,
+                                  size: 14,
+                                  color: CommunityTheme.textSecondary,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Posted in ',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: CommunityTheme.textSecondary,
+                                  ),
+                                ),
+                                Text(
+                                  groupName,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: CommunityTheme.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
