@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flash_ability/utils/community_theme.dart';
 
 class CommentsScreen extends StatefulWidget {
   final String post;
@@ -18,137 +19,262 @@ class CommentsScreen extends StatefulWidget {
 
 class _CommentsScreenState extends State<CommentsScreen> {
   final TextEditingController _commentController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  // Track liked comments
+  Set<int> likedComments = {};
 
   @override
   void dispose() {
     _commentController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CommunityTheme.background,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 1,
-        leading: const BackButton(color: Colors.black),
+        elevation: 0,
+        leading: const BackButton(color: CommunityTheme.textPrimary),
         title: const Text(
           'Comments',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            color: CommunityTheme.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       body: Column(
         children: [
           // Original post
-          Padding(
+          Container(
+            width: double.infinity,
             padding: const EdgeInsets.all(16.0),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x0D000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.person, size: 16),
-                    const SizedBox(width: 4),
-                    Text(
-                      widget.user,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    CircleAvatar(
+                      backgroundColor: CommunityTheme.primaryLight,
+                      radius: 18,
+                      child: Text(
+                        widget.user[0],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: CommunityTheme.primary,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.user,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    widget.post,
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                const SizedBox(height: 12),
+                Text(
+                  widget.post,
+                  style: const TextStyle(fontSize: 16, height: 1.4),
                 ),
               ],
             ),
           ),
 
-          const Divider(),
+          // Comments count
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            color: CommunityTheme.background,
+            child: Text(
+              '${widget.comments.length} comments',
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
+                color: CommunityTheme.textSecondary,
+              ),
+            ),
+          ),
 
           // Comments list
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(16),
+              controller: _scrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               itemCount: widget.comments.length,
               itemBuilder: (context, index) {
                 final comment = widget.comments[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Row(
+                final isLiked = likedComments.contains(index);
+
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const CircleAvatar(
-                        radius: 16,
-                        child: Icon(Icons.person, size: 20),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: CommunityTheme.primaryLight,
+                            radius: 18,
+                            child: Text(
+                              comment['user'][0],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: CommunityTheme.primary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  comment['user'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      comment['user'],
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      comment['timestamp'],
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: CommunityTheme.textLight,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(height: 8),
                                 Text(
-                                  comment['timestamp'],
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade600,
+                                  comment['comment'],
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    height: 1.3,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 4),
-                            Text(comment['comment']),
-                            const SizedBox(height: 8),
-                            Row(
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (isLiked) {
+                                  likedComments.remove(index);
+                                } else {
+                                  likedComments.add(index);
+                                }
+                              });
+                            },
+                            child: Row(
                               children: [
                                 Icon(
-                                  Icons.favorite_border,
-                                  size: 14,
-                                  color: Colors.grey.shade600,
+                                  isLiked
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  size: 18,
+                                  color:
+                                      isLiked
+                                          ? CommunityTheme.primary
+                                          : CommunityTheme.textSecondary,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   'Like',
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade600,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        isLiked
+                                            ? CommunityTheme.primary
+                                            : CommunityTheme.textSecondary,
                                   ),
                                 ),
-                                const SizedBox(width: 16),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          GestureDetector(
+                            onTap: () {
+                              // Focus the comment input and mention the user
+                              _commentController.text = '@${comment['user']} ';
+                              _commentController
+                                  .selection = TextSelection.fromPosition(
+                                TextPosition(
+                                  offset: _commentController.text.length,
+                                ),
+                              );
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              Future.delayed(
+                                const Duration(milliseconds: 100),
+                                () {
+                                  FocusScope.of(context).requestFocus();
+                                },
+                              );
+                            },
+                            child: Row(
+                              children: [
                                 Icon(
                                   Icons.reply,
-                                  size: 14,
-                                  color: Colors.grey.shade600,
+                                  size: 18,
+                                  color: CommunityTheme.textSecondary,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   'Reply',
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade600,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: CommunityTheme.textSecondary,
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -159,13 +285,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
           // Comment input
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.shade200,
-                  blurRadius: 4,
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
                   offset: const Offset(0, -2),
                 ),
               ],
@@ -173,43 +299,57 @@ class _CommentsScreenState extends State<CommentsScreen> {
             child: Row(
               children: [
                 const CircleAvatar(
-                  radius: 16,
-                  child: Icon(Icons.person, size: 20),
+                  backgroundColor: CommunityTheme.primaryLight,
+                  radius: 18,
+                  child: Icon(
+                    Icons.person,
+                    size: 18,
+                    color: CommunityTheme.primary,
+                  ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: TextField(
-                    controller: _commentController,
-                    decoration: InputDecoration(
-                      hintText: 'Add a comment...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: CommunityTheme.inputBackground,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: TextField(
+                      controller: _commentController,
+                      decoration: InputDecoration(
+                        hintText: 'Write a comment...',
+                        hintStyle: const TextStyle(
+                          color: CommunityTheme.textLight,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(
+                            Icons.send_rounded,
+                            color: CommunityTheme.primary,
+                          ),
+                          onPressed: () {
+                            // Implement add comment functionality
+                            if (_commentController.text.trim().isNotEmpty) {
+                              // In a real app, you would add the comment to the database
+                              // For now, we'll just clear the input
+                              _commentController.clear();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Comment added'),
+                                  duration: Duration(seconds: 1),
+                                  backgroundColor: CommunityTheme.primary,
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    // Implement add comment functionality
-                    if (_commentController.text.trim().isNotEmpty) {
-                      // In a real app, you would add the comment to the database
-                      // For now, we'll just clear the input
-                      _commentController.clear();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Comment added'),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-                    }
-                  },
                 ),
               ],
             ),

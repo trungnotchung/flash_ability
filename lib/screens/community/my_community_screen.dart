@@ -3,6 +3,7 @@ import 'package:flash_ability/screens/community/group_detail_screen.dart';
 import 'package:flash_ability/screens/community/new_post_screen.dart';
 import 'package:flash_ability/screens/community/comments_screen.dart';
 import 'package:flash_ability/mock_data/community/community_page.dart';
+import 'package:flash_ability/utils/community_theme.dart';
 
 class MyCommunityScreen extends StatefulWidget {
   const MyCommunityScreen({super.key});
@@ -18,20 +19,21 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CommunityTheme.background,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 1,
-        leading: const BackButton(color: Colors.black),
+        elevation: 0,
+        leading: const BackButton(color: CommunityTheme.textPrimary),
         title: const Text(
           'Community',
           style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
+            color: CommunityTheme.textPrimary,
+            fontWeight: FontWeight.w600,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
+            icon: const Icon(Icons.search, color: CommunityTheme.textPrimary),
             onPressed: () {
               // Implement search functionality
             },
@@ -44,19 +46,14 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Your community',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              const Text('Your community', style: CommunityTheme.headingStyle),
               const SizedBox(height: 16),
               SizedBox(
-                height: 100,
+                height: 110,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: communityGroups.length + 1, // +1 for the add button
+                  itemCount:
+                      communityGroups.length + 1, // +1 for the add button
                   itemBuilder: (context, index) {
                     if (index == communityGroups.length) {
                       // Add new group button
@@ -65,59 +62,101 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
                           // Implement add new group functionality
                         },
                         child: Container(
-                          width: 80,
+                          width: 90,
                           margin: const EdgeInsets.only(right: 12),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(12),
+                            color: CommunityTheme.primaryLight,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: CommunityTheme.primary.withOpacity(0.3),
+                            ),
                           ),
                           child: const Center(
-                            child: Icon(Icons.add, size: 30),
+                            child: Icon(
+                              Icons.add_circle_outline,
+                              size: 30,
+                              color: CommunityTheme.primary,
+                            ),
                           ),
                         ),
                       );
                     }
-                    
+
                     // Community group item
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => GroupDetailScreen(
-                              groupName: communityGroups[index]['groupName'],
-                              recentActivities: recentActivities.where(
-                                (activity) => activity['group'] == communityGroups[index]['groupName']
-                              ).toList(),
-                            ),
+                            builder:
+                                (context) => GroupDetailScreen(
+                                  groupName:
+                                      communityGroups[index]['groupName'],
+                                  recentActivities:
+                                      recentActivities
+                                          .where(
+                                            (activity) =>
+                                                activity['group'] ==
+                                                communityGroups[index]['groupName'],
+                                          )
+                                          .toList(),
+                                ),
                           ),
                         );
                       },
                       child: Container(
-                        width: 80,
+                        width: 90,
                         margin: const EdgeInsets.only(right: 12),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
+                          gradient: LinearGradient(
+                            colors: [
+                              CommunityTheme.primary.withOpacity(0.8),
+                              CommunityTheme.primaryDark,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: CommunityTheme.primary.withOpacity(0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.white.withOpacity(0.9),
+                              radius: 24,
+                              child: Text(
+                                communityGroups[index]['groupName'][0],
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: CommunityTheme.primary,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
                             Text(
                               communityGroups[index]['groupName'].split(' ')[0],
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Text(
                               '${communityGroups[index]['membersCount']} members',
                               style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
+                                fontSize: 11,
+                                color: Colors.white.withOpacity(0.8),
                               ),
                             ),
                           ],
@@ -128,13 +167,7 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Recent activity',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              const Text('Recent activity', style: CommunityTheme.headingStyle),
               const SizedBox(height: 16),
               ListView.builder(
                 shrinkWrap: true,
@@ -142,217 +175,309 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
                 itemCount: recentActivities.length,
                 itemBuilder: (context, index) {
                   final activity = recentActivities[index];
-                  final hasComments = activity['commentsData'] != null && 
-                                     (activity['commentsData'] as List).isNotEmpty;
+                  final hasComments =
+                      activity['commentsData'] != null &&
+                      (activity['commentsData'] as List).isNotEmpty;
                   final isExpanded = expandedComments[index] ?? false;
-                  
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.person, size: 16),
-                          const SizedBox(width: 4),
-                          Text(
-                            activity['user'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            activity['activityTime'],
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              activity['activityType'],
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          activity['post'],
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Row(
+                  final activityType = activity['activityType'] as String;
+                  final tagColor =
+                      CommunityTheme.tagColors[activityType] ??
+                      CommunityTheme.primaryLight;
+                  final tagTextColor =
+                      CommunityTheme.tagTextColors[activityType] ??
+                      CommunityTheme.primary;
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: CommunityTheme.cardDecoration,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
                             children: [
-                              Icon(Icons.favorite_border, 
-                                size: 18, 
-                                color: Colors.grey.shade600
+                              CircleAvatar(
+                                backgroundColor: CommunityTheme.primaryLight,
+                                radius: 18,
+                                child: Text(
+                                  activity['user'][0],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: CommunityTheme.primary,
+                                  ),
+                                ),
                               ),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${activity['likes']}',
-                                style: TextStyle(
-                                  color: Colors.grey.shade600,
+                              const SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    activity['user'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  Text(
+                                    activity['activityTime'],
+                                    style: const TextStyle(
+                                      color: CommunityTheme.textLight,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Spacer(),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: tagColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  activityType,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: tagTextColor,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(width: 16),
-                          GestureDetector(
-                            onTap: () {
-                              if (hasComments) {
-                                // Toggle comments visibility
-                                setState(() {
-                                  expandedComments[index] = !isExpanded;
-                                });
-                              }
-                            },
-                            child: Row(
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            activity['post'],
+                            style: const TextStyle(fontSize: 16, height: 1.4),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: CommunityTheme.divider,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              _buildInteractionButton(
+                                icon: Icons.favorite_border,
+                                label: '${activity['likes']}',
+                                onTap: () {
+                                  // Implement like functionality
+                                },
+                              ),
+                              const SizedBox(width: 24),
+                              _buildInteractionButton(
+                                icon: Icons.chat_bubble_outline,
+                                label: '${activity['comments']}',
+                                onTap: () {
+                                  if (hasComments) {
+                                    // Toggle comments visibility
+                                    setState(() {
+                                      expandedComments[index] = !isExpanded;
+                                    });
+                                  }
+                                },
+                              ),
+                              const SizedBox(width: 24),
+                              _buildInteractionButton(
+                                icon: Icons.share_outlined,
+                                label: 'Share',
+                                onTap: () {
+                                  // Implement share functionality
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Only display comments section if expanded
+                        if (hasComments && isExpanded)
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: CommunityTheme.background,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(16),
+                                bottomRight: Radius.circular(16),
+                              ),
+                            ),
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.comment_outlined, 
-                                  size: 18, 
-                                  color: Colors.grey.shade600
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '${activity['comments']} comments',
-                                  style: TextStyle(
-                                    color: Colors.grey.shade600,
+                                ...(activity['commentsData'] as List).map((
+                                  comment,
+                                ) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(bottom: 12.0),
+                                    padding: const EdgeInsets.all(12.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: CommunityTheme.border,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor:
+                                              CommunityTheme.primaryLight,
+                                          radius: 14,
+                                          child: Text(
+                                            comment['user'][0],
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: CommunityTheme.primary,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    comment['user'],
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 6),
+                                                  Text(
+                                                    comment['timestamp'],
+                                                    style: const TextStyle(
+                                                      fontSize: 11,
+                                                      color:
+                                                          CommunityTheme
+                                                              .textLight,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                comment['comment'],
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+
+                                // View all comments in dedicated screen
+                                if (activity['comments'] > 3)
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => CommentsScreen(
+                                                post: activity['post'],
+                                                user: activity['user'],
+                                                comments:
+                                                    activity['commentsData'],
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: CommunityTheme.primary,
+                                      padding: EdgeInsets.zero,
+                                      minimumSize: const Size(0, 36),
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    child: Text(
+                                      'View all ${activity['comments']} comments',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+
+                                // Add comment input field
+                                Container(
+                                  margin: const EdgeInsets.only(top: 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(24),
+                                    border: Border.all(
+                                      color: CommunityTheme.border,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const SizedBox(width: 12),
+                                      const CircleAvatar(
+                                        backgroundColor:
+                                            CommunityTheme.primaryLight,
+                                        radius: 14,
+                                        child: Icon(
+                                          Icons.person,
+                                          size: 16,
+                                          color: CommunityTheme.primary,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: TextField(
+                                          decoration: const InputDecoration(
+                                            hintText: 'Write a comment...',
+                                            hintStyle: TextStyle(
+                                              fontSize: 13,
+                                              color: CommunityTheme.textLight,
+                                            ),
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  vertical: 12,
+                                                ),
+                                          ),
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.send_rounded,
+                                          size: 20,
+                                          color: CommunityTheme.primary,
+                                        ),
+                                        onPressed: () {
+                                          // Implement add comment functionality
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                      
-                      // Only display comments section if expanded
-                      if (hasComments && isExpanded)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, left: 16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...(activity['commentsData'] as List).map((comment) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Icon(Icons.person_outline, size: 14),
-                                      const SizedBox(width: 4),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  comment['user'],
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 13,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 4),
-                                                Text(
-                                                  comment['timestamp'],
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.grey.shade600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Text(
-                                              comment['comment'],
-                                              style: const TextStyle(fontSize: 13),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              
-                              // View all comments in dedicated screen
-                              if (activity['comments'] > 3)
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CommentsScreen(
-                                          post: activity['post'],
-                                          user: activity['user'],
-                                          comments: activity['commentsData'],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    'View all ${activity['comments']} comments',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              
-                              // Add comment input field
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      decoration: const InputDecoration(
-                                        hintText: 'Add a comment...',
-                                        hintStyle: TextStyle(fontSize: 12),
-                                        isDense: true,
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 8,
-                                        ),
-                                      ),
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.send, size: 16),
-                                    onPressed: () {
-                                      // Implement add comment functionality
-                                    },
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      
-                      const SizedBox(height: 24),
-                    ],
+                      ],
+                    ),
                   );
                 },
               ),
@@ -364,13 +489,36 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const NewPostScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const NewPostScreen()),
           );
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
+        backgroundColor: CommunityTheme.primary,
+        elevation: 2,
+        child: const Icon(Icons.add, size: 28),
+      ),
+    );
+  }
+
+  Widget _buildInteractionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: CommunityTheme.textSecondary),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: CommunityTheme.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }

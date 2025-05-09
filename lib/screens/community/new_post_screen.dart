@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flash_ability/utils/community_theme.dart';
 
 class NewPostScreen extends StatefulWidget {
   final String? groupName;
@@ -33,73 +34,169 @@ class _NewPostScreenState extends State<NewPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CommunityTheme.background,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 1,
-        leading: const BackButton(color: Colors.black),
+        elevation: 0,
+        leading: const BackButton(color: CommunityTheme.textPrimary),
         title: const Text(
           'New post',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            color: CommunityTheme.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         actions: [
-          TextButton(
-            onPressed:
-                _postController.text.trim().isNotEmpty
-                    ? () {
-                      // Implement post submission
-                      Navigator.pop(context);
-                    }
-                    : null,
-            child: const Text(
-              'Post',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: ElevatedButton(
+              onPressed:
+                  _postController.text.trim().isNotEmpty
+                      ? () {
+                        // Implement post submission
+                        Navigator.pop(context);
+                      }
+                      : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CommunityTheme.primary,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: CommunityTheme.primary.withOpacity(
+                  0.5,
+                ),
+                disabledForegroundColor: Colors.white.withOpacity(0.8),
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 0,
+                ),
+              ),
+              child: const Text(
+                'Post',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
             ),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.groupName != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Text(
-                  'Posting in ${widget.groupName}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (widget.groupName != null)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 16.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: CommunityTheme.primaryLight,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.group,
+                            size: 16,
+                            color: CommunityTheme.primary,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Posting in ${widget.groupName}',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: CommunityTheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const CircleAvatar(
+                        backgroundColor: CommunityTheme.primaryLight,
+                        radius: 20,
+                        child: Icon(
+                          Icons.person,
+                          size: 20,
+                          color: CommunityTheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextField(
+                          controller: _postController,
+                          maxLines: 8,
+                          minLines: 5,
+                          decoration: const InputDecoration(
+                            hintText: 'What\'s on your mind?',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          style: const TextStyle(fontSize: 16, height: 1.4),
+                          onChanged: (value) {
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
-            TextField(
-              controller: _postController,
-              maxLines: 5,
-              decoration: const InputDecoration(
-                hintText: 'Type here',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.all(16),
-              ),
-              onChanged: (value) {
-                setState(() {});
-              },
             ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                const Text(
-                  'Tags:',
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: SingleChildScrollView(
+
+            const SizedBox(height: 16),
+
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Add to your post',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Tags section
+                  const Text(
+                    'Tags',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: CommunityTheme.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children:
                           availableTags.map((tag) {
                             final isSelected = selectedTag == tag;
+                            final tagColor =
+                                CommunityTheme.tagColors[tag] ??
+                                CommunityTheme.primaryLight;
+                            final tagTextColor =
+                                CommunityTheme.tagTextColors[tag] ??
+                                CommunityTheme.primary;
+
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -110,23 +207,30 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                 margin: const EdgeInsets.only(right: 8),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
-                                  vertical: 6,
+                                  vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
                                   color:
                                       isSelected
-                                          ? Colors.blue
-                                          : Colors.grey.shade200,
+                                          ? tagColor
+                                          : Colors.transparent,
                                   borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color:
+                                        isSelected
+                                            ? Colors.transparent
+                                            : CommunityTheme.border,
+                                  ),
                                 ),
                                 child: Text(
                                   tag,
                                   style: TextStyle(
                                     color:
                                         isSelected
-                                            ? Colors.white
-                                            : Colors.black,
+                                            ? tagTextColor
+                                            : CommunityTheme.textSecondary,
                                     fontWeight: FontWeight.w500,
+                                    fontSize: 13,
                                   ),
                                 ),
                               ),
@@ -134,57 +238,98 @@ class _NewPostScreenState extends State<NewPostScreen> {
                           }).toList(),
                     ),
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 24),
+
+                  // Options
+                  _buildOptionRow(
+                    title: 'Attachment',
+                    icon: Icons.attach_file,
+                    isActive: hasAttachment,
+                    onTap: () {
+                      setState(() {
+                        hasAttachment = !hasAttachment;
+                      });
+                    },
+                  ),
+                  const Divider(
+                    height: 24,
+                    thickness: 1,
+                    color: CommunityTheme.divider,
+                  ),
+                  _buildOptionRow(
+                    title: 'Location',
+                    icon: Icons.location_on,
+                    isActive: hasLocation,
+                    onTap: () {
+                      setState(() {
+                        hasLocation = !hasLocation;
+                      });
+                    },
+                  ),
+                  const Divider(
+                    height: 24,
+                    thickness: 1,
+                    color: CommunityTheme.divider,
+                  ),
+                  _buildOptionRow(
+                    title: 'Emoji',
+                    icon: Icons.emoji_emotions,
+                    isActive: hasEmoji,
+                    onTap: () {
+                      setState(() {
+                        hasEmoji = !hasEmoji;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-            _buildOptionRow('Attachment', Icons.attach_file, hasAttachment, () {
-              setState(() {
-                hasAttachment = !hasAttachment;
-              });
-            }),
-            const Divider(),
-            _buildOptionRow('Location', Icons.location_on, hasLocation, () {
-              setState(() {
-                hasLocation = !hasLocation;
-              });
-            }),
-            const Divider(),
-            _buildOptionRow('Emoji', Icons.emoji_emotions, hasEmoji, () {
-              setState(() {
-                hasEmoji = !hasEmoji;
-              });
-            }),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOptionRow(
-    String title,
-    IconData icon,
-    bool isActive,
-    VoidCallback onTap,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: GestureDetector(
-        onTap: onTap,
+  Widget _buildOptionRow({
+    required String title,
+    required IconData icon,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           children: [
-            Icon(icon, color: isActive ? Colors.blue : Colors.grey, size: 20),
-            const SizedBox(width: 12),
+            Icon(
+              icon,
+              color:
+                  isActive
+                      ? CommunityTheme.primary
+                      : CommunityTheme.textSecondary,
+              size: 22,
+            ),
+            const SizedBox(width: 16),
             Text(
               title,
               style: TextStyle(
-                fontSize: 16,
-                color: isActive ? Colors.blue : Colors.black,
+                fontSize: 15,
+                color:
+                    isActive
+                        ? CommunityTheme.primary
+                        : CommunityTheme.textPrimary,
                 fontWeight: FontWeight.w500,
               ),
             ),
             const Spacer(),
-            if (isActive) const Icon(Icons.check, color: Colors.blue, size: 20),
+            if (isActive)
+              const Icon(
+                Icons.check_circle,
+                color: CommunityTheme.primary,
+                size: 22,
+              ),
           ],
         ),
       ),
