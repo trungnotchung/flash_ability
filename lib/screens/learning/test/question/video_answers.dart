@@ -11,7 +11,7 @@ class VideoAnswers extends StatefulWidget {
     super.key,
     this.videoUrl = '',
     this.answers = const [],
-    this.correctAnswer = '',
+    this.correctAnswer = '', required Null Function(bool isCorrect) onAnswerSelected,
   });
 
   @override

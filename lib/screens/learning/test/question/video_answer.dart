@@ -6,7 +6,7 @@ class VideoAnswer extends StatefulWidget {
   final String videoUrl;
   final String answer;
 
-  const VideoAnswer({super.key, this.videoUrl = '', this.answer = ''});
+  const VideoAnswer({super.key, this.videoUrl = '', this.answer = '', required Null Function(bool isCorrect) onAnswerSubmitted});
 
   @override
   State<VideoAnswer> createState() => _VideoAnswerState();
