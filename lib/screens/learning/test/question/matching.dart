@@ -16,7 +16,7 @@ class MatchingQuestion {
 }
 
 class MatchingQuestionPage extends StatefulWidget {
-  const MatchingQuestionPage({super.key});
+  const MatchingQuestionPage({super.key, required Null Function(bool isCorrect) onMatchComplete});
 
   @override
   State<MatchingQuestionPage> createState() => _MatchingQuestionPageState();
