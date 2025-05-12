@@ -94,4 +94,18 @@ class UserService {
   static List<Map<String, String>> getAllUsers() {
     return userAccounts;
   }
+
+  /// Clear user data and reset to default values
+  static Future<void> clearUserData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_usernameKey);
+      await prefs.remove(_currentUserIndexKey);
+      _currentUserIndex = 0;
+      _cachedUsername = 'Learner';
+      _initialized = false;
+    } catch (e) {
+      debugPrint('Error clearing user data: $e');
+    }
+  }
 }

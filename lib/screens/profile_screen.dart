@@ -274,6 +274,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               ),
+
+              const Divider(height: 1),
+
+              // Logout Button
+              _buildSettingItem(
+                icon: Icons.logout,
+                title: 'Logout',
+                value: '',
+                onTap: () {
+                  _showLogoutConfirmation();
+                },
+                textColor: Colors.red,
+              ),
             ],
           ),
         ),
@@ -346,24 +359,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required IconData icon,
     required String title,
     required String value,
-    Color? textColor,
     required VoidCallback onTap,
+    Color? textColor,
   }) {
     return ListTile(
-      leading: Icon(icon, color: textColor ?? Theme.of(context).primaryColor),
-      title: Text(
-        title,
-        style: TextStyle(fontWeight: FontWeight.w500, color: textColor),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (value.isNotEmpty)
-            Text(value, style: TextStyle(color: Colors.grey[600])),
-          const SizedBox(width: 8),
-          const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-        ],
-      ),
+      leading: Icon(icon, color: textColor),
+      title: Text(title, style: TextStyle(color: textColor)),
+      trailing:
+          value.isNotEmpty
+              ? Text(
+                value,
+                style: TextStyle(color: textColor ?? Colors.grey[600]),
+              )
+              : null,
       onTap: onTap,
     );
   }
@@ -796,32 +804,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showLogoutConfirmation() {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Logout'),
           content: const Text('Are you sure you want to logout?'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
               },
               child: const Text('Cancel'),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
+            TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                // TODO: Implement logout functionality
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Logout functionality coming soon!'),
-                  ),
-                );
+                // Clear user data and navigate to login screen
+                UserService.clearUserData();
+                Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil('/login', (route) => false);
               },
-              child: const Text('Logout'),
+              child: const Text('Logout', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
