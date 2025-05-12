@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/topic.dart';
-import '../screens/topic_detail_screen.dart';
 
 class TopicCard extends StatelessWidget {
   final Topic topic;
@@ -11,13 +10,8 @@ class TopicCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to topic detail screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TopicDetailScreen(topic: topic),
-          ),
-        );
+        // Navigate to the learning topic screen
+        Navigator.pushNamed(context, '/learning/topic', arguments: topic.name);
       },
       child: Card(
         elevation: 2,

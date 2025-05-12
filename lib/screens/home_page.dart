@@ -5,7 +5,6 @@ import '../mock_data/topics.dart';
 import '../mock_data/flashcards.dart';
 import 'search_screen.dart';
 import 'vocabulary_detail_screen.dart';
-import 'topic_detail_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -243,12 +242,8 @@ class HomePage extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to all topics screen
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('View all topics coming soon!'),
-                        ),
-                      );
+                      // Navigate to all topics screen
+                      Navigator.pushNamed(context, '/learning/all_topics');
                     },
                     child: const Text('View All'),
                   ),
@@ -470,11 +465,11 @@ class HomePage extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
-          Navigator.push(
+          // Navigate to the learning topic screen with the topic name as an argument
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => TopicDetailScreen(topic: topic),
-            ),
+            '/learning/topic',
+            arguments: topic.name,
           );
         },
         borderRadius: BorderRadius.circular(12),
