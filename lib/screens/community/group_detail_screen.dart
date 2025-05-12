@@ -23,6 +23,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
   Map<int, bool> expandedComments = {};
   // Add TextEditingController for comment input
   final Map<int, TextEditingController> commentControllers = {};
+  // Track which posts are liked
+  Set<int> likedPosts = {};
 
   @override
   void dispose() {
@@ -59,6 +61,22 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
 
       // Clear the comment input
       commentControllers[activityIndex]?.clear();
+    });
+  }
+
+  // Add function to handle like/unlike
+  void _toggleLike(int activityIndex) {
+    setState(() {
+      final activity = widget.recentActivities[activityIndex];
+      if (likedPosts.contains(activityIndex)) {
+        // Unlike
+        likedPosts.remove(activityIndex);
+        activity['likes'] = (activity['likes'] as int) - 1;
+      } else {
+        // Like
+        likedPosts.add(activityIndex);
+        activity['likes'] = (activity['likes'] as int) + 1;
+      }
     });
   }
 
@@ -305,11 +323,16 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                   child: Row(
                                     children: [
                                       _buildInteractionButton(
-                                        icon: Icons.favorite_border,
+                                        icon:
+                                            likedPosts.contains(index)
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
                                         label: '${activity['likes']}',
-                                        onTap: () {
-                                          // Implement like functionality
-                                        },
+                                        onTap: () => _toggleLike(index),
+                                        color:
+                                            likedPosts.contains(index)
+                                                ? Colors.red
+                                                : CommunityTheme.textSecondary,
                                       ),
                                       const SizedBox(width: 24),
                                       _buildInteractionButton(
@@ -599,19 +622,20 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    Color? color,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
         children: [
-          Icon(icon, size: 20, color: CommunityTheme.textSecondary),
+          Icon(icon, size: 20, color: color ?? CommunityTheme.textSecondary),
           const SizedBox(width: 6),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: CommunityTheme.textSecondary,
+              color: color ?? CommunityTheme.textSecondary,
             ),
           ),
         ],
