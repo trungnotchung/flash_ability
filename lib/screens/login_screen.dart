@@ -64,6 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF6F3FF),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -74,54 +75,114 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Welcome Back!',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 48),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.person),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your username';
-                      }
-                      return null;
-                    },
+                  // Flashcard + Accessibility Icon
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Icon(
+                        Icons.style,
+                        size: 72,
+                        color: Colors.deepPurple[200],
+                      ), // flashcard
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Icon(
+                          Icons.bolt,
+                          size: 32,
+                          color: Colors.amber,
+                        ), // flash
+                      ),
+                      Positioned(
+                        left: 0,
+                        bottom: 0,
+                        child: Icon(
+                          Icons.accessibility_new,
+                          size: 32,
+                          color: Colors.green[400],
+                        ), // accessibility
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
+                  // App Name
+                  Text(
+                    'FlashAbility',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple,
+                      letterSpacing: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  // Tagline
+                  Text(
+                    'Flashcards for Everyone, Anywhere',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.deepPurple[300],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  // Username Field
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? 'Please enter your username'
+                                : null,
+                  ),
+                  const SizedBox(height: 16),
+                  // Password Field
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Password',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       prefixIcon: Icon(Icons.lock),
                     ),
                     obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? 'Please enter your password'
+                                : null,
                   ),
                   const SizedBox(height: 24),
+                  // Login Button
                   ElevatedButton(
                     onPressed: _isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
                       padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
                     ),
                     child:
                         _isLoading
-                            ? const CircularProgressIndicator()
+                            ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
                             : const Text(
-                              'Login',
-                              style: TextStyle(fontSize: 16),
+                              'Start Learning',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
                             ),
                   ),
                 ],
