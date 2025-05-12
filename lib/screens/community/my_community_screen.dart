@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flash_ability/mock_data/community/community_page.dart';
+import 'package:flash_ability/mock_data/profile/profile.dart';
+import 'package:flash_ability/screens/community/comments_screen.dart';
 import 'package:flash_ability/screens/community/group_detail_screen.dart';
 import 'package:flash_ability/screens/community/new_post_screen.dart';
-import 'package:flash_ability/screens/community/comments_screen.dart';
-import 'package:flash_ability/mock_data/community/community_page.dart';
 import 'package:flash_ability/utils/community_theme.dart';
+import 'package:flutter/material.dart';
 
 class MyCommunityScreen extends StatefulWidget {
   const MyCommunityScreen({super.key});
@@ -15,6 +16,44 @@ class MyCommunityScreen extends StatefulWidget {
 class _MyCommunityScreenState extends State<MyCommunityScreen> {
   // Track which posts have expanded comments
   Map<int, bool> expandedComments = {};
+  // Add TextEditingController for comment input
+  final Map<int, TextEditingController> commentControllers = {};
+
+  @override
+  void dispose() {
+    // Dispose all comment controllers
+    for (var controller in commentControllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  // Add function to handle new comments
+  void _addComment(int activityIndex, String comment) {
+    if (comment.trim().isEmpty) return;
+
+    setState(() {
+      // Create new comment data with actual user name
+      final newComment = {
+        'user': userProfile['name'] ?? 'Anonymous User', // Use actual user name
+        'comment': comment,
+        'timestamp': 'Just now',
+      };
+
+      // Add comment to the activity's commentsData
+      if (recentActivities[activityIndex]['commentsData'] == null) {
+        recentActivities[activityIndex]['commentsData'] = [];
+      }
+      (recentActivities[activityIndex]['commentsData'] as List).add(newComment);
+
+      // Update comment count
+      recentActivities[activityIndex]['comments'] =
+          (recentActivities[activityIndex]['comments'] as int) + 1;
+
+      // Clear the comment input
+      commentControllers[activityIndex]?.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -503,6 +542,11 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: TextField(
+                                          controller: commentControllers
+                                              .putIfAbsent(
+                                                index,
+                                                () => TextEditingController(),
+                                              ),
                                           decoration: const InputDecoration(
                                             hintText: 'Write a comment...',
                                             hintStyle: TextStyle(
@@ -525,7 +569,11 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
                                           color: CommunityTheme.primary,
                                         ),
                                         onPressed: () {
-                                          // Implement add comment functionality
+                                          final controller =
+                                              commentControllers[index];
+                                          if (controller != null) {
+                                            _addComment(index, controller.text);
+                                          }
                                         },
                                       ),
                                     ],
