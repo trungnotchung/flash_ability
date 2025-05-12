@@ -4,9 +4,43 @@ import '../models/topic.dart';
 import '../mock_data/topics.dart';
 import '../mock_data/flashcards.dart';
 import 'search_screen.dart';
+import '../services/user_service.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _username = 'Learner';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadUsername();
+  }
+
+  // Load username using the UserService
+  Future<void> _loadUsername() async {
+    try {
+      final username = await UserService.getUsername();
+      if (mounted) {
+        setState(() {
+          _username = username;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading username: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +127,7 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hello, Learner!',
+                    'Hello, $_username!',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

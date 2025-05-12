@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'placeholder_screen.dart';
 import 'progress_screen.dart';
+import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,9 +19,8 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     const HomePage(),
     const LearningScreen(),
-    // const PlaceholderScreen(title: 'Management'),
-    const ManagementScreen(), // Changed from PlaceholderScreen to ProgressScreen
-    const PlaceholderScreen(title: 'Profile'),
+    const ManagementScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
