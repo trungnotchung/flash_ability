@@ -54,6 +54,84 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _showRegisterDialog() {
+    final _regUsernameController = TextEditingController();
+    final _regPasswordController = TextEditingController();
+    final _regEmailController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Register New Account'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _regUsernameController,
+                decoration: const InputDecoration(labelText: 'Username'),
+              ),
+              TextField(
+                controller: _regEmailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              TextField(
+                controller: _regPasswordController,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final username = _regUsernameController.text.trim();
+                final email = _regEmailController.text.trim();
+                final password = _regPasswordController.text.trim();
+                if (username.isNotEmpty &&
+                    password.isNotEmpty &&
+                    email.isNotEmpty) {
+                  // Check if username already exists
+                  final exists = userAccounts.any(
+                    (u) => u['username'] == username,
+                  );
+                  if (exists) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Username already exists!'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else {
+                    userAccounts.add({
+                      'username': username,
+                      'name': username,
+                      'email': email,
+                      'password': password,
+                      'learningLevel': 'Beginner',
+                      'learningProgress': '0%',
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Account created! Please log in.'),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  }
+                }
+              },
+              child: const Text('Register'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -184,6 +262,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.white,
                               ),
                             ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _showRegisterDialog();
+                    },
+                    child: const Text(
+                      "Don't have an account? Sign Up",
+                      style: TextStyle(color: Colors.deepPurple),
+                    ),
                   ),
                 ],
               ),
