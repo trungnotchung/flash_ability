@@ -5,6 +5,7 @@ import 'package:flash_ability/screens/learning/test/testing.dart';
 import 'package:flash_ability/screens/learning/topic/all_topics.dart';
 import 'package:flash_ability/screens/learning/topic/topic.dart';
 import 'package:flash_ability/screens/learning/vocab/vocab.dart';
+import 'package:flash_ability/screens/login_screen.dart';
 import 'package:flash_ability/screens/main_screen.dart';
 import 'package:flash_ability/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Language Learning App',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Roboto'),
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
+        '/login': (context) => const LoginScreen(),
         '/': (context) => const MainScreen(),
         '/learning': (context) => const LearningScreen(),
         '/learning/all_topics': (context) => const AllTopicsScreen(),
