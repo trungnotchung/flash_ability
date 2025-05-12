@@ -1,5 +1,7 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../mock_data/profile/profile.dart';
 
 /// A service class to manage user-related data
 class UserService {
@@ -13,7 +15,8 @@ class UserService {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      _cachedUsername = prefs.getString(_usernameKey) ?? 'Learner';
+      _cachedUsername =
+          prefs.getString(_usernameKey) ?? userProfile['name'] ?? 'Learner';
       _initialized = true;
       debugPrint('UserService initialized successfully');
     } catch (e) {
