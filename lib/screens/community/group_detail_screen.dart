@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flash_ability/screens/community/new_post_screen.dart';
+import 'package:flash_ability/mock_data/profile/profile.dart';
 import 'package:flash_ability/screens/community/comments_screen.dart';
+import 'package:flash_ability/screens/community/new_post_screen.dart';
 import 'package:flash_ability/utils/community_theme.dart';
+import 'package:flutter/material.dart';
 
 class GroupDetailScreen extends StatefulWidget {
   final String groupName;
@@ -20,6 +21,46 @@ class GroupDetailScreen extends StatefulWidget {
 class _GroupDetailScreenState extends State<GroupDetailScreen> {
   // Track which posts have expanded comments
   Map<int, bool> expandedComments = {};
+  // Add TextEditingController for comment input
+  final Map<int, TextEditingController> commentControllers = {};
+
+  @override
+  void dispose() {
+    // Dispose all comment controllers
+    for (var controller in commentControllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  // Add function to handle new comments
+  void _addComment(int activityIndex, String comment) {
+    if (comment.trim().isEmpty) return;
+
+    setState(() {
+      // Create new comment data with actual user name
+      final newComment = {
+        'user': userProfile['name'] ?? 'Anonymous User',
+        'comment': comment,
+        'timestamp': 'Just now',
+      };
+
+      // Add comment to the activity's commentsData
+      if (widget.recentActivities[activityIndex]['commentsData'] == null) {
+        widget.recentActivities[activityIndex]['commentsData'] = [];
+      }
+      (widget.recentActivities[activityIndex]['commentsData'] as List).add(
+        newComment,
+      );
+
+      // Update comment count
+      widget.recentActivities[activityIndex]['comments'] =
+          (widget.recentActivities[activityIndex]['comments'] as int) + 1;
+
+      // Clear the comment input
+      commentControllers[activityIndex]?.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -461,6 +502,12 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                               const SizedBox(width: 8),
                                               Expanded(
                                                 child: TextField(
+                                                  controller: commentControllers
+                                                      .putIfAbsent(
+                                                        index,
+                                                        () =>
+                                                            TextEditingController(),
+                                                      ),
                                                   decoration:
                                                       const InputDecoration(
                                                         hintText:
@@ -490,7 +537,14 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                                   color: CommunityTheme.primary,
                                                 ),
                                                 onPressed: () {
-                                                  // Implement add comment functionality
+                                                  final controller =
+                                                      commentControllers[index];
+                                                  if (controller != null) {
+                                                    _addComment(
+                                                      index,
+                                                      controller.text,
+                                                    );
+                                                  }
                                                 },
                                               ),
                                             ],
