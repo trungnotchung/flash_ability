@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../services/user_service.dart';
 import 'placeholder_screen.dart';
 
@@ -174,8 +175,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           // User email or additional info
           Text(
-            'user@example.com',
+            UserService.getCurrentUser()['email'] ?? 'No email',
             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+          ),
+
+          // Add a new section to show learning progress
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              children: [
+                Text(
+                  'Learning Level: ${UserService.getCurrentUser()['learningLevel']}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Progress: ${UserService.getCurrentUser()['learningProgress']}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
           ),
         ],
       ),

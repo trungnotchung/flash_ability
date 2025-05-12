@@ -1,8 +1,8 @@
 import 'package:flash_ability/mock_data/community/community_page.dart';
-import 'package:flash_ability/mock_data/profile/profile.dart';
 import 'package:flash_ability/screens/community/comments_screen.dart';
 import 'package:flash_ability/screens/community/group_detail_screen.dart';
 import 'package:flash_ability/screens/community/new_post_screen.dart';
+import 'package:flash_ability/services/user_service.dart';
 import 'package:flash_ability/utils/community_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +37,7 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
     setState(() {
       // Create new comment data with actual user name
       final newComment = {
-        'user': userProfile['name'] ?? 'Anonymous User', // Use actual user name
+        'user': UserService.getCurrentUser()['name'] ?? 'Anonymous User',
         'comment': comment,
         'timestamp': 'Just now',
       };
