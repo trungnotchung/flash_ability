@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/vocabulary.dart';
-import '../screens/vocabulary_detail_screen.dart';
 
 class VocabularyCard extends StatelessWidget {
   final Vocabulary vocabulary;
@@ -11,13 +10,14 @@ class VocabularyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to vocabulary detail screen
-        Navigator.push(
+        // Navigate to the flashcard screen
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder:
-                (context) => VocabularyDetailScreen(vocabulary: vocabulary),
-          ),
+          '/learning/flashcard',
+          arguments: {
+            'words': [vocabulary.word],
+            'index': 0,
+          },
         );
       },
       child: Card(

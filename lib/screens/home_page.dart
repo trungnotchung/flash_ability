@@ -4,7 +4,6 @@ import '../models/topic.dart';
 import '../mock_data/topics.dart';
 import '../mock_data/flashcards.dart';
 import 'search_screen.dart';
-import 'vocabulary_detail_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -200,12 +199,8 @@ class HomePage extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to all vocabulary screen
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('View all vocabulary coming soon!'),
-                        ),
-                      );
+                      // Navigate to all vocabulary screen
+                      Navigator.pushNamed(context, '/learning/vocab');
                     },
                     child: const Text('View All'),
                   ),
@@ -372,12 +367,14 @@ class HomePage extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
-          Navigator.push(
+          // Navigate to the flashcard screen with the vocabulary word
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder:
-                  (context) => VocabularyDetailScreen(vocabulary: vocabulary),
-            ),
+            '/learning/flashcard',
+            arguments: {
+              'words': [vocabulary.word],
+              'index': 0,
+            },
           );
         },
         borderRadius: BorderRadius.circular(12),
