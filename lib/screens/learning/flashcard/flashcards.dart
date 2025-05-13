@@ -35,6 +35,8 @@ class _FlashcardScreenState extends State<FlashcardScreen> with SingleTickerProv
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut)
     );
 
+    _animationController.forward();
+
     print("Words: ${widget.words}");
 
     // Populate flashcard data
