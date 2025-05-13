@@ -6,6 +6,7 @@ class MyFlashcardScreen extends StatelessWidget {
   const MyFlashcardScreen({super.key});
 
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -4,13 +4,32 @@ import 'package:flutter/material.dart';
 
 import 'add_flashcard_to_group.dart';
 
-class MyFlashcardOfGroupScreen extends StatelessWidget {
+class MyFlashcardOfGroupScreen extends StatefulWidget {
   final String groupName;
 
   const MyFlashcardOfGroupScreen({
     super.key,
     required this.groupName,
   });
+
+  @override
+  State<MyFlashcardOfGroupScreen> createState() => _MyFlashcardOfGroupScreenState();
+}
+
+class _MyFlashcardOfGroupScreenState extends State<MyFlashcardOfGroupScreen> {
+  late Future<List<String>> _flashcardsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshFlashcards();
+  }
+
+  void _refreshFlashcards() {
+    setState(() {
+      _flashcardsFuture = FlashcardOperation.getFlashcardOfGroup(widget.groupName);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +39,7 @@ class MyFlashcardOfGroupScreen extends StatelessWidget {
         elevation: 1,
         leading: const BackButton(color: Colors.black),
         title: Text(
-          groupName,
+          widget.groupName,
           style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w500,
@@ -30,7 +49,7 @@ class MyFlashcardOfGroupScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: FutureBuilder<List<String>>(
-          future: FlashcardOperation.getFlashcardOfGroup(groupName),
+          future: _flashcardsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -44,7 +63,11 @@ class MyFlashcardOfGroupScreen extends StatelessWidget {
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) {
                   final word = snapshot.data![index];
-                  return FlashcardWordCard(groupName: groupName, word: word);
+                  return FlashcardWordCard(
+                    groupName: widget.groupName,
+                    word: word,
+                    onDelete: _refreshFlashcards,
+                  );
                 },
               );
             }
@@ -52,15 +75,18 @@ class MyFlashcardOfGroupScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddFlashcardScreen(
-                groupName: groupName,
-              ),
+              builder: (context) => AddFlashcardScreen(groupName: widget.groupName),
             ),
           );
+
+          if (result == true) {
+            // Refresh the flashcards list when a new one is added
+            _refreshFlashcards();
+          }
         },
         backgroundColor: Colors.grey,
         child: const Icon(Icons.add, color: Colors.white),
@@ -72,11 +98,13 @@ class MyFlashcardOfGroupScreen extends StatelessWidget {
 class FlashcardWordCard extends StatelessWidget {
   final String groupName;
   final String word;
+  final VoidCallback onDelete;
 
   const FlashcardWordCard({
     super.key,
     required this.groupName,
     required this.word,
+    required this.onDelete,
   });
 
   @override
@@ -98,8 +126,8 @@ class FlashcardWordCard extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.edit, color: Colors.blue),
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => EditFlashcardScreen(
@@ -108,6 +136,10 @@ class FlashcardWordCard extends StatelessWidget {
                     )
                   ),
                 );
+
+                if (result == true) {
+                  onDelete(); // Refresh the list after editing
+                }
               },
             ),
             IconButton(
@@ -128,8 +160,9 @@ class FlashcardWordCard extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            // FlashcardOperation.deleteFlashcard(groupName, word);
-                            // Navigator.of(context).pop();
+                            FlashcardOperation.deleteFlashcard(word);
+                            Navigator.of(context).pop();
+                            onDelete(); // Refresh the list after deletion
                           },
                           child: const Text('Delete'),
                         ),

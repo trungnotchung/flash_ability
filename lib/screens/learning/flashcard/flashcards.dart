@@ -35,6 +35,8 @@ class _FlashcardScreenState extends State<FlashcardScreen> with SingleTickerProv
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut)
     );
 
+    print("Words: ${widget.words}");
+
     // Populate flashcard data
     for (var word in widget.words) {
       var flashcard = flashcards.firstWhere(
@@ -45,6 +47,8 @@ class _FlashcardScreenState extends State<FlashcardScreen> with SingleTickerProv
         flashcardData.add(flashcard);
       }
     }
+
+    print("Flashcard Data: $flashcardData");
 
     // Set the current index to the selected word
     currentIndex = widget.index;

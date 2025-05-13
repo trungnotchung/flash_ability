@@ -61,6 +61,14 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
       });
 
       // Here you would typically save the flashcard to your storage
+      FlashcardOperation.addFlashcard(
+        flashcard['word']!,
+        flashcard['videoUrl']!,
+        flashcard['imageUrl']!,
+        flashcard['braille']!,
+        flashcard['description']!,
+      );
+
       FlashcardOperation.addFlashcardToGroup(
         widget.groupName,
         flashcard
@@ -76,8 +84,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
         const SnackBar(content: Text('Flashcard created successfully')),
       );
 
-      // Navigate back
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     }
   }
 

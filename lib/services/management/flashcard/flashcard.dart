@@ -44,6 +44,20 @@ class FlashcardOperation {
     };
   }
 
+  static Future<void> addFlashcard(String word, String video, String image, String braille, String description) async {
+    // Simulate a network call
+    await Future.delayed(const Duration(seconds: 1));
+
+    // Add the new flashcard to the list
+    flashcards.add({
+      'word': word,
+      'video': video,
+      'image': image,
+      'braille': braille,
+      'description': description,
+    });
+  }
+
   static Future<void> addFlashcardToGroup(String groupName, Map<String, String> flashcard) async {
     // Simulate a network call
     await Future.delayed(const Duration(seconds: 1));
@@ -73,6 +87,28 @@ class FlashcardOperation {
         ...flashcards[flashcardIndex],
         ...updatedData,
       };
+    }
+  }
+
+  static Future<void> deleteFlashcard(String word) async {
+    // Simulate a network call
+    await Future.delayed(const Duration(seconds: 1));
+
+    // Remove the flashcard from the list
+    flashcards.removeWhere((flashcard) => flashcard['word'] == word);
+
+    // Remove the flashcard from all groups
+    for (var group in flashcardGroups) {
+      final wordsString = group['words'] ?? '';
+      final newWordsString = wordsString.split(',').where((w) => w != word).join(',');
+      group['words'] = newWordsString;
+    }
+
+    // Remove the flashcard from the topics
+    for (var topic in topicsWithVocab) {
+      final flashcardList = topic['flashcards'] ?? [];
+      flashcardList.removeWhere((w) => w == word);
+      topic['flashcards'] = flashcardList;
     }
   }
 }
