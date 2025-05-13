@@ -105,7 +105,9 @@ class _EditFlashcardScreenState extends State<EditFlashcardScreen> {
         // Show error message
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error updating flashcard: ${e.toString()}')),
+            SnackBar(
+              content: Text('Error updating flashcard: ${e.toString()}'),
+            ),
           );
         }
       } finally {
@@ -130,102 +132,103 @@ class _EditFlashcardScreenState extends State<EditFlashcardScreen> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Word Field
-                    TextFormField(
-                      controller: _wordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Word',
-                        border: OutlineInputBorder(),
+      body:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Word Field
+                      TextFormField(
+                        controller: _wordController,
+                        decoration: const InputDecoration(
+                          labelText: 'Word',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a word';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a word';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    // Description Field
-                    TextFormField(
-                      controller: _descriptionController,
-                      decoration: const InputDecoration(
-                        labelText: 'Description',
-                        border: OutlineInputBorder(),
+                      // Description Field
+                      TextFormField(
+                        controller: _descriptionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Description',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: 3,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a description';
+                          }
+                          return null;
+                        },
                       ),
-                      maxLines: 3,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a description';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    // Braille Field
-                    TextFormField(
-                      controller: _brailleController,
-                      decoration: const InputDecoration(
-                        labelText: 'Braille',
-                        border: OutlineInputBorder(),
+                      // Braille Field
+                      TextFormField(
+                        controller: _brailleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Braille',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter braille representation';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter braille representation';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    // Image URL Field
-                    TextFormField(
-                      controller: _imageUrlController,
-                      decoration: const InputDecoration(
-                        labelText: 'Image URL',
-                        border: OutlineInputBorder(),
+                      // Image URL Field
+                      TextFormField(
+                        controller: _imageUrlController,
+                        decoration: const InputDecoration(
+                          labelText: 'Image URL',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter an image URL';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter an image URL';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    // Video URL Field
-                    TextFormField(
-                      controller: _videoUrlController,
-                      decoration: const InputDecoration(
-                        labelText: 'Video URL (Optional)',
-                        border: OutlineInputBorder(),
+                      // Video URL Field
+                      TextFormField(
+                        controller: _videoUrlController,
+                        decoration: const InputDecoration(
+                          labelText: 'Video URL (Optional)',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // Save Button
-                    ElevatedButton(
-                      onPressed: _isLoading ? null : _saveFlashcard,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      // Save Button
+                      ElevatedButton(
+                        onPressed: _isLoading ? null : _saveFlashcard,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: const Text('Save Changes'),
                       ),
-                      child: const Text('Save Changes'),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
     );
   }
 }

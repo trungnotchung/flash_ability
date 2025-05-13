@@ -55,7 +55,9 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
                   "Select a group to view its flashcards",
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -93,7 +95,9 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
                             children: [
                               Icon(
                                 Icons.style_outlined,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.5),
                                 size: 64,
                               ),
                               const SizedBox(height: 16),
@@ -102,7 +106,9 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.7),
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -110,7 +116,9 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
                                 'Tap the + button to create your first group',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.5),
                                 ),
                               ),
                             ],
@@ -119,7 +127,8 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
                       } else {
                         return ListView.separated(
                           itemCount: snapshot.data!.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          separatorBuilder:
+                              (context, index) => const SizedBox(height: 16),
                           itemBuilder: (context, index) {
                             final group = snapshot.data![index];
                             return FlashcardGroupButton(
@@ -128,9 +137,10 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => MyFlashcardOfGroupScreen(
-                                      groupName: group,
-                                    ),
+                                    builder:
+                                        (context) => MyFlashcardOfGroupScreen(
+                                          groupName: group,
+                                        ),
                                   ),
                                 );
                               },
