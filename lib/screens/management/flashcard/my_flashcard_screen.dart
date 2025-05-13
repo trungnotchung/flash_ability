@@ -50,7 +50,9 @@ class MyFlashcardScreen extends StatelessWidget {
                   "Select a group to view its flashcards",
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -88,7 +90,9 @@ class MyFlashcardScreen extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.style_outlined,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.5),
                                 size: 64,
                               ),
                               const SizedBox(height: 16),
@@ -97,7 +101,9 @@ class MyFlashcardScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.7),
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -105,7 +111,9 @@ class MyFlashcardScreen extends StatelessWidget {
                                 'Tap the + button to create your first group',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.5),
                                 ),
                               ),
                             ],
@@ -114,7 +122,8 @@ class MyFlashcardScreen extends StatelessWidget {
                       } else {
                         return ListView.separated(
                           itemCount: snapshot.data!.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          separatorBuilder:
+                              (context, index) => const SizedBox(height: 16),
                           itemBuilder: (context, index) {
                             final group = snapshot.data![index];
                             return FlashcardGroupButton(
@@ -123,9 +132,10 @@ class MyFlashcardScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => MyFlashcardOfGroupScreen(
-                                      groupName: group,
-                                    ),
+                                    builder:
+                                        (context) => MyFlashcardOfGroupScreen(
+                                          groupName: group,
+                                        ),
                                   ),
                                 );
                               },

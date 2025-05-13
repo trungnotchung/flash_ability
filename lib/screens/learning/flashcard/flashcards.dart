@@ -13,7 +13,8 @@ class FlashcardScreen extends StatefulWidget {
   State<FlashcardScreen> createState() => _FlashcardScreenState();
 }
 
-class _FlashcardScreenState extends State<FlashcardScreen> with SingleTickerProviderStateMixin {
+class _FlashcardScreenState extends State<FlashcardScreen>
+    with SingleTickerProviderStateMixin {
   // Flashcard data
   late List<Map<String, String>> flashcardData = [];
   late int currentIndex;
@@ -32,14 +33,14 @@ class _FlashcardScreenState extends State<FlashcardScreen> with SingleTickerProv
     );
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut)
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
     // Populate flashcard data
     for (var word in widget.words) {
       var flashcard = flashcards.firstWhere(
         (flashcard) => flashcard['word'] == word,
-        orElse: () => {}
+        orElse: () => {},
       );
       if (flashcard.isNotEmpty) {
         flashcardData.add(flashcard);
@@ -78,7 +79,8 @@ class _FlashcardScreenState extends State<FlashcardScreen> with SingleTickerProv
   }
 
   void moveToPreviousCard() {
-    final prevIndex = (currentIndex - 1 + flashcardData.length) % flashcardData.length;
+    final prevIndex =
+        (currentIndex - 1 + flashcardData.length) % flashcardData.length;
     setState(() {
       currentIndex = prevIndex;
     });
@@ -92,10 +94,7 @@ class _FlashcardScreenState extends State<FlashcardScreen> with SingleTickerProv
       appBar: AppBar(
         title: const Text(
           'Flashcards',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -209,10 +208,7 @@ class _FlashcardScreenState extends State<FlashcardScreen> with SingleTickerProv
         children: [
           const Text(
             'How to Use Flashcards',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           ListTile(

@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 class AddFlashcardScreen extends StatefulWidget {
   final String groupName;
 
-  const AddFlashcardScreen({
-    super.key,
-    required this.groupName,
-  });
+  const AddFlashcardScreen({super.key, required this.groupName});
 
   @override
   State<AddFlashcardScreen> createState() => _AddFlashcardScreenState();
@@ -61,10 +58,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
       });
 
       // Here you would typically save the flashcard to your storage
-      FlashcardOperation.addFlashcardToGroup(
-        widget.groupName,
-        flashcard
-      );
+      FlashcardOperation.addFlashcardToGroup(widget.groupName, flashcard);
 
       // Add flashcard to the selected topic
       if (_selectedTopic.isNotEmpty) {
@@ -90,10 +84,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
         leading: const BackButton(color: Colors.black),
         title: const Text(
           'Create new flashcard',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
         ),
       ),
       body: SingleChildScrollView(
@@ -106,10 +97,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
               children: [
                 const Text(
                   'word',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -120,7 +108,10 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -133,10 +124,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                 const SizedBox(height: 16),
                 const Text(
                   'description',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -149,7 +137,10 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -162,10 +153,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                 const SizedBox(height: 16),
                 const Text(
                   'braille',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -176,7 +164,10 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                     suffixIcon: const Icon(Icons.arrow_upward),
                   ),
                 ),
@@ -184,10 +175,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                 const SizedBox(height: 16),
                 const Text(
                   'image',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -198,7 +186,10 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                     suffixIcon: const Icon(Icons.arrow_upward),
                   ),
                 ),
@@ -206,10 +197,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                 const SizedBox(height: 16),
                 const Text(
                   'video',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -220,7 +208,10 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                     suffixIcon: const Icon(Icons.arrow_upward),
                   ),
                 ),
@@ -228,10 +219,7 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                 const SizedBox(height: 16),
                 const Text(
                   'topic',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
@@ -241,15 +229,19 @@ class _AddFlashcardScreenState extends State<AddFlashcardScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                   ),
                   isExpanded: true,
-                  items: _topics.map((String topic) {
-                    return DropdownMenuItem<String>(
-                      value: topic,
-                      child: Text(topic),
-                    );
-                  }).toList(),
+                  items:
+                      _topics.map((String topic) {
+                        return DropdownMenuItem<String>(
+                          value: topic,
+                          child: Text(topic),
+                        );
+                      }).toList(),
                   onChanged: (String? newValue) {
                     if (newValue != null) {
                       setState(() {

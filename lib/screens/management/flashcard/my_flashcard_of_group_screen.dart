@@ -7,10 +7,7 @@ import 'add_flashcard_to_group.dart';
 class MyFlashcardOfGroupScreen extends StatelessWidget {
   final String groupName;
 
-  const MyFlashcardOfGroupScreen({
-    super.key,
-    required this.groupName,
-  });
+  const MyFlashcardOfGroupScreen({super.key, required this.groupName});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +34,9 @@ class MyFlashcardOfGroupScreen extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('No flashcards found in this group'));
+              return const Center(
+                child: Text('No flashcards found in this group'),
+              );
             } else {
               return ListView.separated(
                 itemCount: snapshot.data!.length,
@@ -56,9 +55,7 @@ class MyFlashcardOfGroupScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddFlashcardScreen(
-                groupName: groupName,
-              ),
+              builder: (context) => AddFlashcardScreen(groupName: groupName),
             ),
           );
         },
@@ -85,13 +82,13 @@ class FlashcardWordCard extends StatelessWidget {
       elevation: 2,
       margin: const EdgeInsets.symmetric(vertical: 5),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 10,
+        ),
         title: Text(
           word.trim(),
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -102,10 +99,11 @@ class FlashcardWordCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditFlashcardScreen(
-                      groupName: groupName,
-                      word: word
-                    )
+                    builder:
+                        (context) => EditFlashcardScreen(
+                          groupName: groupName,
+                          word: word,
+                        ),
                   ),
                 );
               },
@@ -118,7 +116,9 @@ class FlashcardWordCard extends StatelessWidget {
                   builder: (context) {
                     return AlertDialog(
                       title: const Text('Delete Flashcard'),
-                      content: const Text('Are you sure you want to delete this flashcard?'),
+                      content: const Text(
+                        'Are you sure you want to delete this flashcard?',
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () {
