@@ -124,7 +124,7 @@ class _FlashCardState extends State<FlashCard>
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.asset(
-                  widget.data['image']!,
+                  "assets/images/${widget.data['image']!}",
                   height: 200,
                   width: 200,
                   fit: BoxFit.cover,
