@@ -11,6 +11,7 @@ class TestingScreen extends StatelessWidget {
     final username = UserService.getCurrentUser()['name'] ?? 'User';
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: Row(
           children: [
@@ -42,6 +43,33 @@ class TestingScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Personalized greeting
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0, top: 8.0),
+                child: Text(
+                  'Hello, $username!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+
+              // Subtitle
+              Padding(
+                padding: const EdgeInsets.only(bottom: 24.0),
+                child: Text(
+                  'Let\'s test your knowledge today',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ),
+
               // Progress card
               Card(
                 elevation: 2,
@@ -95,6 +123,11 @@ class TestingScreen extends StatelessWidget {
                         minHeight: 8,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(4),
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.surfaceVariant,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       const SizedBox(height: 8),

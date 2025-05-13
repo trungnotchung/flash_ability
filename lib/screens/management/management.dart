@@ -1,6 +1,7 @@
 import 'package:flash_ability/screens/management/flashcard/my_flashcard_screen.dart';
 import 'package:flash_ability/screens/progress_screen.dart';
 import 'package:flash_ability/screens/community/my_community_screen.dart';
+import 'package:flash_ability/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 class ManagementScreen extends StatelessWidget {
@@ -8,18 +9,25 @@ class ManagementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get username for personalized greeting
+    final username = UserService.getCurrentUser()['name'] ?? 'User';
+
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
+
+        title: Row(
+          children: [
+            const Icon(Icons.settings, size: 28),
+            const SizedBox(width: 8),
+            const Text(
+              'Management',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
-        leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
-        title: Text(
-          'Management',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -33,15 +41,16 @@ class ManagementScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Personalized greeting
                 Text(
-                  "Manage Your Learning",
+                  'Manage Your Learning',
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -50,13 +59,19 @@ class ManagementScreen extends StatelessWidget {
                 Text(
                   "Access and manage all your learning resources",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     color: Theme.of(
                       context,
                     ).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
+                const Text(
+                  'Learning Resources',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 16),
+
                 ManagementButton(
                   title: 'My Flashcards',
                   description: 'Create and manage your flashcard decks',
@@ -123,66 +138,61 @@ class ManagementButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Icon(
+                  icon,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 24.0,
+                ),
               ),
-              child: Icon(
-                icon,
-                color: Theme.of(context).colorScheme.primary,
-                size: 28,
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withOpacity(0.7),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.7),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-            ),
-          ],
+              Icon(
+                Icons.arrow_forward_ios,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                size: 16.0,
+              ),
+            ],
+          ),
         ),
       ),
     );
