@@ -36,4 +36,15 @@ class TopicOperation {
       topicData['vocab'] = vocabList;
     }
   }
+
+  static Future<void> addTopic(String topic) async {
+    // Simulate a network call
+    await Future.delayed(const Duration(seconds: 1));
+
+    // Add the topic to the list
+    topicsWithVocab.add({
+      'topic': topic,
+      'vocab': [],
+    });
+  }
 }

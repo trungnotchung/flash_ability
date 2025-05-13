@@ -1,9 +1,8 @@
 import 'package:flash_ability/screens/learning/learning.dart';
 import 'package:flash_ability/screens/management/management.dart';
+import 'package:flash_ability/services/learning/topic/topic.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
-import 'placeholder_screen.dart';
-import 'progress_screen.dart';
 import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -93,11 +92,49 @@ class _MainScreenState extends State<MainScreen> {
                       title: const Text('Add New Topic'),
                       onTap: () {
                         Navigator.pop(context);
-                        // TODO: Navigate to add topic screen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Add topic feature coming soon!'),
-                          ),
+                        // Show dialog to enter new topic
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            String newTopic = '';
+                            return AlertDialog(
+                              title: const Text('Add New Topic'),
+                              content: TextField(
+                                autofocus: true,
+                                decoration: const InputDecoration(
+                                  hintText: 'Enter topic name',
+                                  border: OutlineInputBorder(),
+                                ),
+                                onChanged: (value) {
+                                  newTopic = value;
+                                },
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    if (newTopic.trim().isNotEmpty) {
+                                      TopicOperation.addTopic(newTopic);
+
+                                      // Close dialog and show confirmation
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text('Topic "$newTopic" has been added'),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
+                                  child: const Text('Add'),
+                                ),
+                              ],
+                            );
+                          },
                         );
                       },
                     ),
