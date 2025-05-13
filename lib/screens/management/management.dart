@@ -51,7 +51,9 @@ class ManagementScreen extends StatelessWidget {
                   "Access and manage all your learning resources",
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -116,7 +118,7 @@ class ManagementButton extends StatelessWidget {
     required this.title,
     required this.description,
     required this.icon,
-    required this.onTap
+    required this.onTap,
   });
 
   @override
@@ -168,7 +170,9 @@ class ManagementButton extends StatelessWidget {
                     description,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.7),
                     ),
                   ),
                 ],

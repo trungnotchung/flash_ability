@@ -46,12 +46,7 @@ class _LearningScreenState extends State<LearningScreen> {
         ),
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
       ),
       body: SingleChildScrollView(
         child: Column(

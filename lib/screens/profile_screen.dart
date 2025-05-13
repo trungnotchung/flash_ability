@@ -61,12 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
         title: const Text(
           'Profile',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -339,15 +334,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const Divider(height: 1),
 
               // Logout
-              _buildSettingItem(
-                icon: Icons.logout,
-                title: 'Logout',
-                value: '',
-                textColor: Colors.red,
-                onTap: () {
-                  _showLogoutConfirmation();
-                },
-              ),
+              // _buildSettingItem(
+              //   icon: Icons.logout,
+              //   title: 'Logout',
+              //   value: '',
+              //   textColor: Colors.red,
+              //   onTap: () {
+              //     _showLogoutConfirmation();
+              //   },
+              // ),
             ],
           ),
         ),

@@ -267,9 +267,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       _showRegisterDialog();
                     },
-                    child: const Text(
-                      "Don't have an account? Sign Up",
-                      style: TextStyle(color: Colors.deepPurple),
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.deepPurple),
+                        children: const [
+                          TextSpan(text: "Don't have an account? "),
+                          TextSpan(
+                            text: "Sign Up",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
