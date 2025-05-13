@@ -2,11 +2,15 @@ import 'package:flash_ability/screens/management/flashcard/my_flashcard_of_group
 import 'package:flash_ability/services/management/flashcard/group.dart';
 import 'package:flutter/material.dart';
 
-class MyFlashcardScreen extends StatelessWidget {
+class MyFlashcardScreen extends StatefulWidget {
   const MyFlashcardScreen({super.key});
 
   @override
+  State<MyFlashcardScreen> createState() => _MyFlashcardScreenState();
+}
 
+class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -143,7 +147,46 @@ class MyFlashcardScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          final TextEditingController controller = TextEditingController();
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Create New Group'),
+              content: TextField(
+                controller: controller,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Enter group name',
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    final value = controller.text.trim();
+                    if (value.isNotEmpty) {
+                      await GroupOperation.addGroup(value);
+
+                      print("Groups: ${await GroupOperation.getGroups()}");
+
+                      if (mounted) {
+                        Navigator.of(context).pop();
+                        setState(() {}); // Refresh the list
+                      }
+                    }
+                  },
+                  child: const Text('Create'),
+                ),
+              ],
+            ),
+          );
+        },
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add, color: Colors.white),
       ),

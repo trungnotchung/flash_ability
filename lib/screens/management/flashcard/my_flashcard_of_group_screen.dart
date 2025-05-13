@@ -88,7 +88,7 @@ class _MyFlashcardOfGroupScreenState extends State<MyFlashcardOfGroupScreen> {
             _refreshFlashcards();
           }
         },
-        backgroundColor: Colors.grey,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
