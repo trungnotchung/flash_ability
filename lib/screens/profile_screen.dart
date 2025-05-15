@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 import '../services/user_service.dart';
 import 'placeholder_screen.dart';
@@ -17,6 +19,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double _fontSize = 14;
   String _username = 'User'; // Store current username
 
+  // Image picker and profile picture
+  final ImagePicker _picker = ImagePicker();
+  File? _profileImage;
+  String? _profileImagePath;
+
   // List of available languages
   final List<String> _languages = ['English', 'Vietnamese', 'Lao'];
 
@@ -33,9 +40,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadUserData() async {
     try {
       final username = await UserService.getUsername();
+      final profileImagePath = await UserService.getProfileImagePath();
+
       if (mounted) {
         setState(() {
           _username = username;
+          _profileImagePath = profileImagePath;
+          if (profileImagePath != null && profileImagePath.isNotEmpty) {
+            _profileImage = File(profileImagePath);
+          }
         });
       }
     } catch (e) {
@@ -54,6 +67,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } catch (e) {
       debugPrint('Error saving username: $e');
+    }
+  }
+
+  // Save profile image path
+  Future<void> _saveProfileImage(String imagePath) async {
+    try {
+      final success = await UserService.setProfileImagePath(imagePath);
+      if (success && mounted) {
+        setState(() {
+          _profileImagePath = imagePath;
+          _profileImage = File(imagePath);
+        });
+      }
+    } catch (e) {
+      debugPrint('Error saving profile image: $e');
     }
   }
 
@@ -114,7 +142,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: 2,
                   ),
                 ),
-                child: const Icon(Icons.person, size: 60, color: Colors.grey),
+                child: ClipOval(
+                  child:
+                      _profileImage != null
+                          ? Image.file(
+                            _profileImage!,
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 100,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.person,
+                                size: 60,
+                                color: Colors.grey,
+                              );
+                            },
+                          )
+                          : const Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.grey,
+                          ),
+                ),
               ),
               Positioned(
                 bottom: 0,
@@ -393,12 +442,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Take a Photo'),
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: Implement camera functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Camera functionality coming soon!'),
-                    ),
-                  );
+                  _getImageFromCamera();
                 },
               ),
               ListTile(
@@ -406,12 +450,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: const Text('Choose from Gallery'),
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: Implement gallery functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Gallery functionality coming soon!'),
-                    ),
-                  );
+                  _getImageFromGallery();
                 },
               ),
               ListTile(
@@ -427,6 +466,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               ),
+              if (_profileImage != null)
+                ListTile(
+                  leading: const Icon(Icons.delete, color: Colors.red),
+                  title: const Text(
+                    'Remove Current Photo',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _removeProfileImage();
+                  },
+                ),
             ],
           ),
         );
@@ -824,5 +875,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  // Take a photo using the camera
+  Future<void> _getImageFromCamera() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 600,
+        maxHeight: 600,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        await _saveProfileImage(image.path);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile picture updated!')),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error picking image from camera: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error taking photo. Please try again.')),
+      );
+    }
+  }
+
+  // Pick an image from the gallery
+  Future<void> _getImageFromGallery() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 600,
+        maxHeight: 600,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        await _saveProfileImage(image.path);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile picture updated!')),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error picking image from gallery: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error selecting image. Please try again.'),
+        ),
+      );
+    }
+  }
+
+  // Remove the current profile image
+  Future<void> _removeProfileImage() async {
+    try {
+      await UserService.setProfileImagePath('');
+      setState(() {
+        _profileImage = null;
+        _profileImagePath = null;
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Profile picture removed')));
+    } catch (e) {
+      debugPrint('Error removing profile image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error removing profile picture')),
+      );
+    }
   }
 }
