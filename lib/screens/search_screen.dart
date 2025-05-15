@@ -4,6 +4,57 @@ import '../models/vocabulary.dart';
 import '../models/topic.dart';
 import '../widgets/vocabulary_card.dart';
 import '../widgets/topic_card.dart';
+import '../mock_data/flashcards.dart';
+import '../mock_data/topics.dart';
+
+// Helper function for getting topic icons
+IconData _getTopicIcon(String topicName) {
+  // Map topic names to appropriate icons
+  switch (topicName.toLowerCase()) {
+    case 'family':
+      return Icons.family_restroom;
+    case 'school':
+      return Icons.school;
+    case 'animal':
+      return Icons.pets;
+    case 'sport':
+      return Icons.sports_soccer;
+    case 'food':
+      return Icons.restaurant;
+    case 'weather':
+      return Icons.cloud;
+    case 'country':
+      return Icons.public;
+    case 'nature':
+      return Icons.nature;
+    default:
+      return Icons.category;
+  }
+}
+
+// Helper function for getting topic colors
+Color _getTopicColor(String topicName) {
+  switch (topicName.toLowerCase()) {
+    case 'family':
+      return Colors.blue;
+    case 'school':
+      return Colors.orange;
+    case 'animal':
+      return Colors.brown;
+    case 'sport':
+      return Colors.green;
+    case 'food':
+      return Colors.red;
+    case 'weather':
+      return Colors.lightBlue;
+    case 'country':
+      return Colors.purple;
+    case 'nature':
+      return Colors.teal;
+    default:
+      return Colors.indigo;
+  }
+}
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -32,73 +83,41 @@ class _SearchScreenState extends State<SearchScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    // Initialize with sample data
-    _loadSampleData();
+    // Load data from mock files
+    _loadMockData();
   }
 
-  void _loadSampleData() {
-    // Sample vocabulary data
-    _allVocabulary = [
-      Vocabulary(
-        id: '1',
-        word: 'Dog',
-        meaning: 'A domesticated carnivorous mammal',
-        exampleSentence: 'The dog is playing outside.',
-        imageUrl: 'assets/images/dog.png',
-      ),
-      Vocabulary(
-        id: '2',
-        word: 'Family',
-        meaning: 'A flashcard of people related by blood or marriage',
-        exampleSentence: 'I spend time with my family every weekend.',
-        imageUrl: 'assets/images/family.png',
-      ),
-      Vocabulary(
-        id: '3',
-        word: 'Travel',
-        meaning:
-            'To go from one place to another, often for leisure or business',
-        exampleSentence: 'I love to travel to new countries.',
-        imageUrl: 'assets/images/travel.png',
-      ),
-      Vocabulary(
-        id: '4',
-        word: 'Address',
-        meaning:
-            'The particulars of the place where someone lives or an organization is situated',
-        exampleSentence: 'Please provide your home address.',
-        imageUrl: 'assets/images/address.png',
-      ),
-      Vocabulary(
-        id: '5',
-        word: 'Addition',
-        meaning: 'The process of adding numbers',
-        exampleSentence: 'The addition of 5 and 3 equals 8.',
-        imageUrl: 'assets/images/addition.png',
-      ),
-      Vocabulary(
-        id: '6',
-        word: 'Fruit',
-        meaning:
-            'The sweet and fleshy product of a tree or other plant that contains seed',
-        exampleSentence: 'Apples and oranges are fruits.',
-        imageUrl: 'assets/images/fruit.png',
-      ),
-    ];
+  void _loadMockData() {
+    // Convert flashcards data to Vocabulary objects and filter out items without valid images
+    _allVocabulary =
+        flashcards
+            .where(
+              (flashcard) =>
+                  flashcard['image'] != null &&
+                  flashcard['image'].toString().isNotEmpty,
+            )
+            .map((flashcard) {
+              return Vocabulary(
+                id: flashcard['word'] ?? '',
+                word: flashcard['word'] ?? '',
+                meaning: flashcard['description'] ?? '',
+                exampleSentence: '', // No example sentence in mock data
+                imageUrl:
+                    'assets/images/${flashcard['image'] ?? 'placeholder.png'}',
+              );
+            })
+            .toList();
 
-    // Sample topic data
-    _allTopics = [
-      Topic(id: '1', name: 'Animals', imageUrl: 'assets/images/animals.png'),
-      Topic(id: '2', name: 'Health', imageUrl: 'assets/images/health.png'),
-      Topic(id: '3', name: 'Food', imageUrl: 'assets/images/food.png'),
-      Topic(id: '4', name: 'Nature', imageUrl: 'assets/images/nature.png'),
-      Topic(id: '5', name: 'Fruits', imageUrl: 'assets/images/fruits.png'),
-      Topic(
-        id: '6',
-        name: 'Mathematics',
-        imageUrl: 'assets/images/mathematics.png',
-      ),
-    ];
+    // Convert topics data to Topic objects
+    _allTopics =
+        topicsWithVocab.map((topicData) {
+          final topicName = topicData['topic'] as String;
+          return Topic(
+            id: topicName,
+            name: topicName,
+            imageUrl: 'assets/images/${topicName.toLowerCase()}.png',
+          );
+        }).toList();
   }
 
   @override
@@ -270,7 +289,7 @@ class _SearchScreenState extends State<SearchScreen>
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 2,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
         childAspectRatio: 0.8,
@@ -343,7 +362,63 @@ class _SearchScreenState extends State<SearchScreen>
       ),
       itemCount: _filteredTopics.length,
       itemBuilder: (context, index) {
-        return TopicCard(topic: _filteredTopics[index]);
+        final topic = _filteredTopics[index];
+        // Use custom card with icon instead of TopicCard widget
+        return Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: InkWell(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/learning/topic',
+                arguments: topic.name,
+              );
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: _getTopicColor(topic.name).withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _getTopicIcon(topic.name),
+                        size: 40,
+                        color: _getTopicColor(topic.name),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      topic.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
