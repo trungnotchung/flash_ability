@@ -1,5 +1,13 @@
 List<Map<String, String>> userAccounts = [
   {
+    'username': 'trung',
+    'name': 'Trung',
+    'email': 'trung@gmail.com',
+    'password': 'trung',
+    'learningLevel': 'Intermediate',
+    'learningProgress': '80%',
+  },
+  {
     'username': 'johndoe',
     'name': 'John Doe',
     'email': 'john.doe@example.com',
