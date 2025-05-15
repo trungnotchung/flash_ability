@@ -76,6 +76,13 @@ class _SearchScreenState extends State<SearchScreen>
   List<Vocabulary> _filteredVocabulary = [];
   List<Topic> _filteredTopics = [];
 
+  // List to store search history
+  List<String> _searchHistory = [];
+  // Maximum number of history items to store
+  final int _maxHistoryItems = 5;
+  // Flag to show/hide search history
+  bool _showSearchHistory = false;
+
   Timer? _debounce;
 
   @override
@@ -85,6 +92,21 @@ class _SearchScreenState extends State<SearchScreen>
 
     // Load data from mock files
     _loadMockData();
+
+    // Add focus listener to show history when search field is focused
+    _searchController.addListener(_onSearchFocusChange);
+  }
+
+  void _onSearchFocusChange() {
+    if (_searchController.text.isEmpty) {
+      setState(() {
+        _showSearchHistory = true;
+      });
+    } else {
+      setState(() {
+        _showSearchHistory = false;
+      });
+    }
   }
 
   void _loadMockData() {
@@ -131,6 +153,10 @@ class _SearchScreenState extends State<SearchScreen>
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
+    setState(() {
+      _showSearchHistory = query.isEmpty;
+    });
+
     _debounce = Timer(const Duration(milliseconds: 500), () {
       // Simulate network delay
       setState(() {
@@ -166,8 +192,41 @@ class _SearchScreenState extends State<SearchScreen>
           _filteredVocabulary = filteredVocab;
           _filteredTopics = filteredTopics;
           _isLoading = false;
+
+          // Add to search history if results were found and query is not empty
+          if ((filteredVocab.isNotEmpty || filteredTopics.isNotEmpty) &&
+              query.isNotEmpty &&
+              !_searchHistory.contains(query)) {
+            _addToSearchHistory(query);
+          }
         });
       });
+    });
+  }
+
+  void _addToSearchHistory(String query) {
+    setState(() {
+      // Remove query if it already exists to avoid duplicates
+      _searchHistory.remove(query);
+      // Add the new query at the beginning of the list
+      _searchHistory.insert(0, query);
+      // Keep only the most recent searches
+      if (_searchHistory.length > _maxHistoryItems) {
+        _searchHistory = _searchHistory.sublist(0, _maxHistoryItems);
+      }
+    });
+  }
+
+  void _useHistoryQuery(String query) {
+    _searchController.text = query;
+    _onSearchChanged(query);
+    // Move this query to the top of history
+    _addToSearchHistory(query);
+  }
+
+  void _clearHistory() {
+    setState(() {
+      _searchHistory.clear();
     });
   }
 
@@ -226,10 +285,74 @@ class _SearchScreenState extends State<SearchScreen>
         controller: _tabController,
         children: [
           // Vocabulary Tab
-          _buildVocabularyTab(),
+          Stack(
+            children: [
+              _buildVocabularyTab(),
+              if (_showSearchHistory && _searchHistory.isNotEmpty)
+                _buildSearchHistory(),
+            ],
+          ),
 
           // Topic Tab
-          _buildTopicTab(),
+          Stack(
+            children: [
+              _buildTopicTab(),
+              if (_showSearchHistory && _searchHistory.isNotEmpty)
+                _buildSearchHistory(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchHistory() {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Recent Searches',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                if (_searchHistory.isNotEmpty)
+                  TextButton(
+                    onPressed: _clearHistory,
+                    child: const Text('Clear All'),
+                  ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _searchHistory.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: const Icon(Icons.history),
+                  title: Text(_searchHistory[index]),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.close, size: 16),
+                    onPressed: () {
+                      setState(() {
+                        _searchHistory.removeAt(index);
+                      });
+                    },
+                  ),
+                  onTap: () => _useHistoryQuery(_searchHistory[index]),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
