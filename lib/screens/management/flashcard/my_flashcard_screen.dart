@@ -1,5 +1,6 @@
 import 'package:flash_ability/screens/management/flashcard/my_flashcard_of_group_screen.dart';
 import 'package:flash_ability/services/management/flashcard/group.dart';
+import 'package:flash_ability/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 class MyFlashcardScreen extends StatefulWidget {
@@ -12,17 +13,30 @@ class MyFlashcardScreen extends StatefulWidget {
 class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
   @override
   Widget build(BuildContext context) {
+    // Get username for personalized greeting
+    final username = UserService.getCurrentUser()['name'] ?? 'User';
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
-        title: Text(
-          'My Flashcards',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.style,
+              color: Theme.of(context).colorScheme.primary,
+              size: 24,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'My Flashcards',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
       body: Container(
@@ -45,22 +59,96 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
                 Text(
                   "Your Flashcard Groups",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  "Select a group to view its flashcards",
+                  "Manage your flashcard collections",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     color: Theme.of(
                       context,
                     ).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
                 const SizedBox(height: 24),
+
+                // Stats Card
+                FutureBuilder<List<String>>(
+                  future: GroupOperation.getGroups(),
+                  builder: (context, snapshot) {
+                    final groupCount =
+                        snapshot.hasData ? snapshot.data!.length : 0;
+                    return Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                Icons.folder,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 28,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Your Collections',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'You have $groupCount flashcard groups',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withOpacity(0.7),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+
+                // Text(
+                //   "Your Flashcard Groups",
+                //   style: TextStyle(
+                //     fontSize: 18,
+                //     fontWeight: FontWeight.bold,
+                //     color: Theme.of(context).colorScheme.primary,
+                //   ),
+                // ),
+                // const SizedBox(height: 16),
                 Expanded(
                   child: FutureBuilder<List<String>>(
                     future: GroupOperation.getGroups(),
@@ -125,25 +213,79 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
                           ),
                         );
                       } else {
-                        return ListView.separated(
+                        return ListView.builder(
                           itemCount: snapshot.data!.length,
-                          separatorBuilder:
-                              (context, index) => const SizedBox(height: 16),
                           itemBuilder: (context, index) {
                             final group = snapshot.data![index];
-                            return FlashcardGroupButton(
-                              groupName: group,
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => MyFlashcardOfGroupScreen(
-                                          groupName: group,
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0),
+                              child: Card(
+                                margin: EdgeInsets.zero,
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(16),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) =>
+                                                MyFlashcardOfGroupScreen(
+                                                  groupName: group,
+                                                ),
+                                      ),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(10.0),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(
+                                              10.0,
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.style_outlined,
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
+                                            size: 24.0,
+                                          ),
                                         ),
+                                        const SizedBox(width: 16.0),
+                                        Expanded(
+                                          child: Text(
+                                            group,
+                                            style: const TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withOpacity(0.5),
+                                          size: 16.0,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             );
                           },
                         );
@@ -163,109 +305,108 @@ class _MyFlashcardScreenState extends State<MyFlashcardScreen> {
             context: context,
             builder:
                 (context) => AlertDialog(
-                  title: const Text('Create New Group'),
-                  content: TextField(
-                    controller: controller,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter group name',
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      border: OutlineInputBorder(),
+                  title: Text(
+                    'Create New Group',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Enter a name for your new flashcard group',
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.7),
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: controller,
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          hintText: 'Group name',
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          prefixIcon: Icon(
+                            Icons.create_new_folder,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                      ),
                     ),
-                    TextButton(
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                      ),
                       onPressed: () async {
                         final value = controller.text.trim();
                         if (value.isNotEmpty) {
                           await GroupOperation.addGroup(value);
-
-                          print("Groups: ${await GroupOperation.getGroups()}");
-
                           if (mounted) {
                             Navigator.of(context).pop();
                             setState(() {}); // Refresh the list
                           }
                         }
                       },
-                      child: const Text('Create'),
+                      child: const Text(
+                        'Create',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
+                  actionsPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
           );
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-    );
-  }
-}
-
-class FlashcardGroupButton extends StatelessWidget {
-  final String groupName;
-  final VoidCallback onTap;
-
-  const FlashcardGroupButton({
-    super.key,
-    required this.groupName,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.style_outlined,
-                color: Theme.of(context).colorScheme.primary,
-                size: 28,
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Text(
-                groupName,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-            ),
-          ],
-        ),
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
     );
   }
