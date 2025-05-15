@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flash_ability/mock_data/community/community_page.dart';
 import 'package:flash_ability/screens/community/comments_screen.dart';
 import 'package:flash_ability/screens/community/group_detail_screen.dart';
@@ -367,9 +369,60 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
 
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            activity['post'],
-                            style: const TextStyle(fontSize: 16, height: 1.4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                activity['post'],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  height: 1.4,
+                                ),
+                              ),
+                              if (activity['attachment'] != null)
+                                Container(
+                                  margin: const EdgeInsets.only(top: 12),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(
+                                      File(activity['attachment']),
+                                      width: double.infinity,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              if (activity['location'] != null)
+                                Container(
+                                  margin: const EdgeInsets.only(top: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: CommunityTheme.primaryLight,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on,
+                                        size: 16,
+                                        color: CommunityTheme.primary,
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        activity['location'],
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          color: CommunityTheme.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -615,11 +668,18 @@ class _MyCommunityScreenState extends State<MyCommunityScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const NewPostScreen()),
           );
+
+          if (result != null) {
+            setState(() {
+              // Add the new post to the beginning of the list
+              recentActivities.insert(0, result);
+            });
+          }
         },
         backgroundColor: CommunityTheme.primary,
         elevation: 2,

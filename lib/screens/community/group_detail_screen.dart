@@ -146,8 +146,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder:
@@ -155,6 +155,13 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                   NewPostScreen(groupName: widget.groupName),
                         ),
                       );
+
+                      if (result != null) {
+                        setState(() {
+                          // Add the new post to the beginning of the list
+                          widget.recentActivities.insert(0, result);
+                        });
+                      }
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('Create Post'),
